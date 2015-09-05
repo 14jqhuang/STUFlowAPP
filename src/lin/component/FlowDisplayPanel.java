@@ -221,11 +221,14 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			
 			//如果全部账号用完了,还是没登上,可能是用户名或密码错误
 			if(time==ButtonAreaPanel.readAccount.accountList.size()&&ReadStatus.loginStatus==0)
-			{		JOptionPane.showMessageDialog(this, "已经没有可用的账号了");	}
+			{		JOptionPane.showMessageDialog(this, "已经没有可用的账号了");
+					FlowAppMainFrame.autoSelect=false;}
 			
 			//如果全部账号用完了,还是没流量
 			if(time==ButtonAreaPanel.readAccount.accountList.size()&&ReadStatus.useOut)
-				JOptionPane.showMessageDialog(this, "你拥有的账号流量全部用完了");
+			{	JOptionPane.showMessageDialog(this, "你拥有的账号流量全部用完了");
+				FlowAppMainFrame.autoSelect=false;
+			}
 			
 		}
 		

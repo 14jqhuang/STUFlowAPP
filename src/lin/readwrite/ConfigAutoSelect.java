@@ -38,8 +38,8 @@ public class ConfigAutoSelect {
 			openFile();
 			String temp="n";
 			temp=br.readLine();
-System.out.println(temp);
-			if(temp.equals("")||temp==null)
+//System.out.println(temp);
+			if(temp==null||temp.equals(""))
 			{
 				br.close();
 				return  false;
