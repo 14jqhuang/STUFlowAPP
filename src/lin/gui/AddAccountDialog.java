@@ -26,7 +26,7 @@ public class AddAccountDialog extends JDialog implements ActionListener {
 	private JButton sureButton;
 	private JButton cancalButton;
 	public  WriteAccount writeAccount;
-	public AddAccountDialog()  {
+	public AddAccountDialog() throws UnsupportedEncodingException  {
 		// TODO Auto-generated constructor stub
 		this.setAlwaysOnTop(true);
 		this.setTitle("ÃÌº”’À∫≈");

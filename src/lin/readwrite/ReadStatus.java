@@ -356,26 +356,26 @@ System.out.println("user: "+userName
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		ReadStatus re=new ReadStatus();		
-		re.setWebStatus();
-		re.setLoginStatus(re.input);
-System.out.println("loginStatus="+ReadStatus.loginStatus);
-		re.setUseOut();
-System.out.println("UseOut?"+useOut);
-System.out.println("Input=null?"+(re.input==null));
-System.out.println("input="+re.input);
-System.out.println("UserName"+re.getUserName(re.input));
-System.out.println("TotalAmount="+re.getTotalAmount(re.input));
-System.out.println("UsedAmpunt="+re.getUsedAmount(re.input));
-System.out.println("RemainAmount="+re.getRemainAmount());
-		ReadStatus.setNull();
-System.out.println("\n\nAftersetNull\n"
-		+ "loginStatus="+loginStatus
-		+"\nUseOut?"+useOut
-		+ "\nUserName"+re.getUserName(re.input)
-		+ "\nTotalAmount="+re.getTotalAmount(re.input)
-		+ "\nUsedAmpunt="+re.getUsedAmount(re.input)
-		+ "\nRemainAmount="+re.getRemainAmount());
-		re.setWebStatus();
+//		ReadStatus re=new ReadStatus();		
+//		re.setWebStatus();
+//		re.setLoginStatus(re.input);
+//System.out.println("loginStatus="+ReadStatus.loginStatus);
+//		re.setUseOut();
+//System.out.println("UseOut?"+useOut);
+//System.out.println("Input=null?"+(re.input==null));
+//System.out.println("input="+re.input);
+//System.out.println("UserName"+re.getUserName(re.input));
+//System.out.println("TotalAmount="+re.getTotalAmount(re.input));
+//System.out.println("UsedAmpunt="+re.getUsedAmount(re.input));
+//System.out.println("RemainAmount="+re.getRemainAmount());
+//		ReadStatus.setNull();
+//System.out.println("\n\nAftersetNull\n"
+//		+ "loginStatus="+loginStatus
+//		+"\nUseOut?"+useOut
+//		+ "\nUserName"+re.getUserName(re.input)
+//		+ "\nTotalAmount="+re.getTotalAmount(re.input)
+//		+ "\nUsedAmpunt="+re.getUsedAmount(re.input)
+//		+ "\nRemainAmount="+re.getRemainAmount());
+//		re.setWebStatus();
 	}
 }

@@ -1,11 +1,13 @@
 package lin.readwrite;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import lin.function.WavFileFilter;
 
-public class GetMusicFile {
+public class GetMusicFile implements ResourcePath {
 	public HashMap< String, File> hashMap;
 	public ArrayList<String> musicList;
 	public String[] strMusicList;
@@ -17,13 +19,13 @@ public class GetMusicFile {
 	}
 	
 @Deprecated
-	public void getMusicFile(int number)
+	public void getMusicFile(int number) throws UnsupportedEncodingException
 	{
 		musicList=new ArrayList<String>();
 		String temp;
 		for(int i=0;i<number;i++)
 		{
-			temp=ResourcePath.JARPATH+i+".wav";
+			temp=decode(ResourcePath.JARPATH)+i+".wav";
 			musicList.add(temp);
 		}
 		strMusicList=new String[musicList.size()];
@@ -58,5 +60,11 @@ public class GetMusicFile {
 //		GetMusicFile m=new GetMusicFile();
 //		new PlayMusic(m.musicList.get(0),false).play();
 //	}
+
+	@Override
+	public String decode(String path) throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		return URLDecoder.decode(path, "utf-8");
+	}
 
 }

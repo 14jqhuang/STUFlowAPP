@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -72,8 +73,13 @@ public class UpdateAccount2Dialog extends JDialog implements ActionListener {
 			if(userNameInput.getText().trim().length()>=4&&
 					(new String(passwordInput.getPassword())).trim().length()!=0)
 			{	
-				new UpdateAccount( index, userNameInput.getText(),
-						new String(passwordInput.getPassword()));
+				try {
+					new UpdateAccount( index, userNameInput.getText(),
+							new String(passwordInput.getPassword()));
+				} catch (UnsupportedEncodingException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				this.dispose();
 				try {
 					ButtonAreaPanel.readAccount=new ReadAccount();

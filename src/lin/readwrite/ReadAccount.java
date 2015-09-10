@@ -6,12 +6,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
-public class ReadAccount {
+public class ReadAccount implements ResourcePath{
 	
 	public  String jarPath;
 	public HashMap<String,String> hashMap;
@@ -23,7 +25,7 @@ public class ReadAccount {
 		accountList=new ArrayList<String>();
 		hashMap=new HashMap<String,String>();
 		try {
-			File f=new File(ResourcePath.ACCOUNTPATH);
+			File f=new File(decode(ResourcePath.ACCOUNTPATH));
 			if(!f.exists())
 				f.createNewFile();
 			br=new BufferedReader(new InputStreamReader(new FileInputStream(f)));
@@ -86,5 +88,11 @@ public class ReadAccount {
 				accountList.toArray(accountArrary);
 			} 
 		}
+	}
+
+	@Override
+	public String decode(String path) throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		return URLDecoder.decode(path, "utf-8");
 	}
 }

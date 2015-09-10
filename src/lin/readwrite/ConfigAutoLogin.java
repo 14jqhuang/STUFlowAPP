@@ -7,14 +7,16 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
-public class ConfigAutoLogin {
+public class ConfigAutoLogin implements ResourcePath{
 	private String jarPath;
 	private BufferedReader br;
 	private PrintWriter pw;
 	public ConfigAutoLogin() throws IOException {
 		// TODO Auto-generated constructor stub
-		jarPath=ResourcePath.CONFIGPATH;
+		jarPath=this.decode(ResourcePath.CONFIGPATH);
 	}
 	/*
 	 * 使用局部的file变量会自动创建,没有使用的话也不会创建
@@ -116,6 +118,11 @@ public class ConfigAutoLogin {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		new ConfigAutoLogin();
+	}
+	@Override
+	public String decode(String path) throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		return URLDecoder.decode(path, "utf-8");
 	}
 
 }

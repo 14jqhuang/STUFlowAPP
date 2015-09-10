@@ -2,6 +2,7 @@ package lin.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,7 +21,12 @@ public class DropAccountDialog extends UpdateAccountDialog implements ActionList
 		// TODO Auto-generated method stub
 		if(e.getActionCommand().equals("确定"))
 		{	
-			new DropAccount(this.accountSelectCombo.getSelectedIndex());
+			try {
+				new DropAccount(this.accountSelectCombo.getSelectedIndex());
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			JOptionPane.showMessageDialog(this, "删除成功");
 			super.dispose();
 		}else {

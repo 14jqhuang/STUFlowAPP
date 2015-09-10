@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -139,7 +141,12 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		//添加账号的功能
 		if(e.getSource()==addUser)
 		{	FlowAppMainFrame.inside=true;
-			new AddAccountDialog();
+			try {
+				new AddAccountDialog();
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if(accountSelectCombo!=null)
 				accountSelectCombo.removeAllItems();
 			for(String item:readAccount.accountArrary)
