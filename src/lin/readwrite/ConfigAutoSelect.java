@@ -7,8 +7,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
-public class ConfigAutoSelect {
+public class ConfigAutoSelect implements ResourcePath{
 
 	private BufferedReader br;
 	private PrintWriter pw;
@@ -20,7 +22,7 @@ public class ConfigAutoSelect {
 	public BufferedReader openFile() throws IOException
 	{	
 		try {
-			File f=new File(ResourcePath.CONFIG1PATH);
+			File f=new File(decode(ResourcePath.CONFIG1PATH));
 //System.out.println("exist="+f.exists());
 			if(!f.exists())
 				f.createNewFile();
@@ -38,8 +40,8 @@ public class ConfigAutoSelect {
 			openFile();
 			String temp="n";
 			temp=br.readLine();
-System.out.println(temp);
-			if(temp.equals("")||temp==null)
+//System.out.println(temp);
+			if(temp==null||temp.equals(""))
 			{
 				br.close();
 				return  false;
@@ -96,11 +98,11 @@ System.out.println(temp);
 					
 	}
 	
-	
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
+	@Override
+	public String decode(String path) throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		 return URLDecoder.decode(path, "utf-8");
 	}
 
 }
