@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,7 +39,7 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 	private PlayMusic music;
 	public static String musicPath;
 	public static int alarmAmount;
-	public AlarmSettingDialog(String maxFlow) {
+	public AlarmSettingDialog(String maxFlow) throws UnsupportedEncodingException {
 		// TODO Auto-generated constructor stub
 		//界面设计
 		this.setTitle("设置提醒");
@@ -92,11 +93,6 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 	{
 		this.maxFlow=maxFlow;
 		model.setMaximum(this.maxFlow);
-	}
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		AlarmSettingDialog af=new AlarmSettingDialog(""+800);
-		af.setMaxFlow(1000);
 	}
 
 	public void actionPerformed(ActionEvent e) {
