@@ -126,7 +126,12 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		//设置提醒,设置之后会变成取消提醒字样
 		if(action.equals("设置提醒"))//这里如果用getAccom..会报错 为毛啊?因为时间器执行的时候没有激发事件
 		{	FlowAppMainFrame.inside=true;
-			new AlarmSettingDialog(ReadStatus.subNum(ReadStatus.totalAmount));			
+			try {
+				new AlarmSettingDialog(ReadStatus.subNum(ReadStatus.totalAmount));
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
 		}
 		if(alarmhasSet)
 		{	alarmButton.setText("取消提醒");

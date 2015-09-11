@@ -11,7 +11,7 @@ public class GetMusicFile implements ResourcePath {
 	public HashMap< String, File> hashMap;
 	public ArrayList<String> musicList;
 	public String[] strMusicList;
-	public GetMusicFile(String path) {
+	public GetMusicFile(String path) throws UnsupportedEncodingException {
 		// TODO Auto-generated constructor stub
 		musicList=new ArrayList<String>();
 		hashMap=new HashMap<String, File>();
@@ -31,11 +31,11 @@ public class GetMusicFile implements ResourcePath {
 		strMusicList=new String[musicList.size()];
 		musicList.toArray(strMusicList);
 	}
-	public void getMusic(String jarPath)
+	public void getMusic(String jarPath) throws UnsupportedEncodingException
 	{	
 		try {
 			File[] files=null;
-			File f=new File(jarPath);
+			File f=new File(decode(jarPath));
 			if(f.isDirectory())
 				files=f.listFiles(new WavFileFilter());
 			for(File fi:files)
