@@ -127,7 +127,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 //System.out.println("weblost");
 			statusLabel.setForeground(Color.blue);
 			statusLabel.setText("ÒÑ¶ÏÍø");
-			logoutButton.setEnabled(false);			
+//			logoutButton.setEnabled(false);			
 		}
 	}
     
@@ -178,8 +178,8 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 		else {
 			statusLabel.setForeground(Color.blue);
 			statusLabel.setText("ÒÑ¶ÏÍø");
-			logoutButton.setEnabled(false);
-			ButtonAreaPanel.loginButton.setEnabled(false);
+//			logoutButton.setEnabled(false);
+//			ButtonAreaPanel.loginButton.setEnabled(false);
 			
 		}
     }
