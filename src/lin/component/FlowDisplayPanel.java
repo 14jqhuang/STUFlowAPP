@@ -105,7 +105,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
     	logoutButton=new JButton("ÍË³öµÇÂ¼");
     	logoutButton.addActionListener(this);
-    	logoutButton.setEnabled(false);
+//    	logoutButton.setEnabled(false);
     	this.add(logoutButton, constraints);
     	
     	if (!ReadStatus.WebLost) {

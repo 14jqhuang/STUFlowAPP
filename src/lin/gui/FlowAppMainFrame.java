@@ -222,7 +222,9 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		
 		//ÏÔÊ¾¾«¼òÃæ°å
 		if(chekboxItem[1].isSelected()&&simplifyDialog==null)
-				simplifyDialog=new SimplifyDialog(true,displayPanel.timer);
+		{		simplifyDialog=new SimplifyDialog(true,displayPanel.timer);
+				this.setVisible(false);
+		}
 		if(!chekboxItem[1].isSelected()&&simplifyDialog!=null)
 			{	simplifyDialog.dispose();
 				simplifyDialog=null;
