@@ -181,7 +181,7 @@ System.out.println("user: "+userName
 		this.setLoginStatus(input);
 		try {
 			if(useOut)
-				return "流量已用完啦";				
+				return ""+0;				
 			else if(loginStatus==IN) {
 				int tempTotal[] = this.getSplitData(this.getTotalAmount(input).split(","));
 				int tempUsed[] = this.getSplitData(this.getUsedAmount(input).split(","));
@@ -264,7 +264,7 @@ System.out.println("user: "+userName
 		}
 	}
 	
-	public  void setLoginStatus(StringBuilder input)
+	 public  void setLoginStatus(StringBuilder input)
 	{
 		if(!WebLost)
 		{try {

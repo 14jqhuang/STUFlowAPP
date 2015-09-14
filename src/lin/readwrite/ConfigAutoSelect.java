@@ -62,10 +62,10 @@ public class ConfigAutoSelect implements ResourcePath{
 		return false;
 	}
 	
-	public void writeY()
+	public void writeY() throws UnsupportedEncodingException
 	{
 		try {
-			File f=new File(ResourcePath.CONFIG1PATH);
+			File f=new File(decode(ResourcePath.CONFIG1PATH));
 			pw=new PrintWriter(new FileOutputStream(f));
 			pw.println("y");
 			pw.close();
@@ -75,10 +75,10 @@ public class ConfigAutoSelect implements ResourcePath{
 		}
 	}
 	
-	public void writeN()
+	public void writeN() throws UnsupportedEncodingException
 	{
 		try {
-			File f=new File(ResourcePath.CONFIG1PATH);
+			File f=new File(decode(ResourcePath.CONFIG1PATH));
 			pw=new PrintWriter(new FileOutputStream(f));
 			pw.println("n");
 			pw.close();

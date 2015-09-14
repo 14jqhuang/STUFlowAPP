@@ -233,7 +233,12 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 				if (i!=0) {
 					FlowAppMainFrame.autoSelect = true;
 					//新建一个记录的文件
-					new ConfigAutoSelect().writeY();
+					try {
+						new ConfigAutoSelect().writeY();
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 //System.out.println("select");
 				}
 				i++;
@@ -243,7 +248,12 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 				if (i!=0) {
 					//没有选中自动切换的话就写入 n
 //System.out.println("didn't select");
-					new ConfigAutoSelect().writeN();
+					try {
+						new ConfigAutoSelect().writeN();
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					FlowAppMainFrame.autoSelect = false;
 					autoSelectChBox.setSelected(false);
 				}
