@@ -25,7 +25,7 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 	private GridBagLayout gridbag;
 	private GridBagConstraints constraints;
 	private JPanel jPanel;
-	public SimplifyDialog(boolean inCheck,Timer timer) {
+	public SimplifyDialog(boolean asComponent,Timer timer) {
 		jPanel=new JPanel();
     	jPanel.setBorder(new TitledBorder("Á÷Á¿"));
     	gridbag=new GridBagLayout();
@@ -69,13 +69,13 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
     	Dimension d=getToolkit().getScreenSize();
     	this.setLocation(d.width-150,0);
     	this.add(jPanel);
-    	this.setAlwaysOnTop(true);
     	
     	this.setLoginStatus(ReadStatus.loginStatus, ReadStatus.useOut);
     	
-    	if(inCheck)
+    	if(asComponent)
     		this.addWindowListener(this);
     	else this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        	
     	this.setVisible(true);
 	}
 	
@@ -113,7 +113,7 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 	    	this.setLoginStatus(status,ReadStatus.useOut);
     	}else
     	{
-    		this.setTitle(name);
+    		this.setTitle("");
 	    	this.usedText.setText("");
 	    	this.remainText.setText("");
 	    	this.setLoginStatus(status,ReadStatus.useOut);
@@ -125,6 +125,11 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 		new SimplifyDialog(false,null);
 	}
 
+	public void updateOnTop(boolean infront)
+	{
+		this.setAlwaysOnTop(infront);
+		this.setVisible(true);
+	}
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
@@ -168,6 +173,5 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 }

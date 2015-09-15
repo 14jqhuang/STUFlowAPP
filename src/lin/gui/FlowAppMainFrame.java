@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
+
 import lin.component.ButtonAreaPanel;
 import lin.component.FlowDisplayPanel;
 import lin.readwrite.ConfigAutoLogin;
@@ -25,11 +26,13 @@ import lin.readwrite.ReadStatus;
 public class FlowAppMainFrame extends JFrame implements ActionListener, ItemListener, WindowListener{
 	private ButtonAreaPanel buttonPanel;
 	private FlowDisplayPanel displayPanel;
+	
 	private JSplitPane split;
 	private JMenuBar menubar;
 	private JMenu menu[];
 	private JMenuItem menuItem[];
-	public static JCheckBoxMenuItem chekboxItem[];
+	public boolean infront=true;
+	
 	public String[] strMenu= {"账号管理","功能"};
 	public String[] strMenuItem={"修改","删除","设置自登账号","清空"};
 	public String[] strCheckboxItem={"保持最前","精简面板"};
@@ -37,6 +40,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	public static final int SET=1;//已经设置了自登账号
 	public static final int LAST=-1;//有上次自动记录的能登录的账号
 	public static final int INIT=0;//文件里面什么都没有	
+	public static JCheckBoxMenuItem chekboxItem[];
 	public static SimplifyDialog simplifyDialog;
 	public static int  autologin;
 	public static boolean autoSelect;
@@ -220,16 +224,23 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 			this.setVisible(true);
 		}
 		
+		if(chekboxItem[0].isSelected())
+			infront=true;
+		else infront=false;
+		
 		//显示精简面板
 		if(chekboxItem[1].isSelected()&&simplifyDialog==null)
-		{		simplifyDialog=new SimplifyDialog(true,displayPanel.timer);
+		{		simplifyDialog=new SimplifyDialog(true,displayPanel.timer);				
+System.out.println(infront);
+				simplifyDialog.updateOnTop(infront);
 				this.setVisible(false);
 		}
 		if(!chekboxItem[1].isSelected()&&simplifyDialog!=null)
 			{	simplifyDialog.dispose();
 				simplifyDialog=null;
+				this.setAlwaysOnTop(true);
 			}
-System.out.println("激发");
+//System.out.println("激发");
 	}
 
 	public void windowActivated(WindowEvent arg0) {
