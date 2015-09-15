@@ -40,7 +40,7 @@ public class ReadStatus implements ActionListener {
 		try {
 			ReadStatus.setWebLost();
 //System.out.println("WebLost="+WebLost);
-			timer=new Timer(1000, this);
+			timer=new Timer(5000, this);
 			if(!WebLost)
 			{	
 				timer.start();		

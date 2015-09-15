@@ -26,6 +26,7 @@ import lin.readwrite.ReadStatus;
 public class FlowAppMainFrame extends JFrame implements ActionListener, ItemListener, WindowListener{
 	private ButtonAreaPanel buttonPanel;
 	private FlowDisplayPanel displayPanel;
+	private VerySimpleDialog verySimpleDialog;
 	
 	private JSplitPane split;
 	private JMenuBar menubar;
@@ -35,7 +36,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	
 	public String[] strMenu= {"账号管理","功能"};
 	public String[] strMenuItem={"修改","删除","设置自登账号","清空"};
-	public String[] strCheckboxItem={"保持最前","精简面板"};
+	public String[] strCheckboxItem={"保持最前","精简面板","超极面板"};
 	public static final int LOGNO=2;//设置了自动登录但是没有设置账号
 	public static final int SET=1;//已经设置了自登账号
 	public static final int LAST=-1;//有上次自动记录的能登录的账号
@@ -240,7 +241,13 @@ System.out.println(infront);
 				simplifyDialog=null;
 				this.setAlwaysOnTop(true);
 			}
-//System.out.println("激发");
+		
+		//显示超精简面板
+		if(chekboxItem[2].isSelected())
+		{	verySimpleDialog=new VerySimpleDialog(displayPanel.timer);
+			verySimpleDialog.updateOnTop(infront);
+			this.setVisible(false);
+		}
 	}
 
 	public void windowActivated(WindowEvent arg0) {

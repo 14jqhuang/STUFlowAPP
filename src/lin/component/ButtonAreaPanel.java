@@ -82,7 +82,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		this.add(autoSelectChBox);
 		
 		//Æô¶¯Ê±¼äÆ÷
-		timer=new Timer(1000, this);
+		timer=new Timer(5000, this);
 		if(!ReadStatus.WebLost)
 			timer.start();
 		else loginButton.setEnabled(false);
