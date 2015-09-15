@@ -140,6 +140,12 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     		this.totalText.setText(total);
     		this.remainText.setText(remain);
     		this.setLoginStatus(status,ReadStatus.useOut);
+    	}else {
+    		this.nameText.setText("");
+    		this.usedText.setText("");
+    		this.totalText.setText("");
+    		this.remainText.setText("");
+    		this.setLoginStatus(status,ReadStatus.useOut);
     	}
     }
     
@@ -237,13 +243,16 @@ System.out.println(time);
 					ReadStatus.remainAmount,ReadStatus.loginStatus);
 		this.setTexts(ReadStatus.userName,ReadStatus.usedAmount, 
 				ReadStatus.totalAmount, ReadStatus.remainAmount,ReadStatus.loginStatus);
+		
+		//退出登录的处理动作
 		if(e.getSource()==logoutButton)
 			try {
 				if(FlowAppMainFrame.autologin!=1&&FlowAppMainFrame.autologin!=2)
 				{	new ConfigAutoLogin().write_1Name(ReadStatus.userName);
 					FlowAppMainFrame.autologin=-1;
 				}
-				new SendLoginRequest().logout(ResourcePath.SERVERPATH);					
+				new SendLoginRequest().logout(ResourcePath.SERVERPATH);		
+				//更新显示的数据
 				this.setTexts(ReadStatus.userName,ReadStatus.usedAmount, 
 						ReadStatus.totalAmount, ReadStatus.remainAmount,ReadStatus.loginStatus);
 				ButtonAreaPanel.loginButton.setEnabled(true);			

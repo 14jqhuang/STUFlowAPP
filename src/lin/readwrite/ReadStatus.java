@@ -128,21 +128,25 @@ System.out.println("user: "+userName
 			{
 				temp=input.substring(m.start(), m.end());
 			}
-			p=Pattern.compile("\\d{0,3},?\\d{1,3},\\d{1,3}");
+			p=Pattern.compile("\\d{0,3},?\\d{0,3},\\d{1,3}");
 			m=p.matcher(temp);
 			temp1 = "没有找到内容";
 			while(m.find())
 			{
 				temp1=temp.substring(m.start(), m.end());
 			}
+			if(temp1.length()<=3)
+				return "000,000,"+temp1;
+			else if(temp1.length()<=7)
+						return "000,"+temp1;
+					else return temp1;
 		} catch (NullPointerException e) {
 //			timer.stop();
 			ReadStatus.setNull();
 		}
 //System.out.println("temp1="+temp1);
-		if(temp1.length()<=7)
-			return "0,"+temp1;
-		else return temp1;
+		return temp1;
+		
 	}
 	
 	public  String getUserName(StringBuilder input)
