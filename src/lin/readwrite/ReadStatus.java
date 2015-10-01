@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
+import lin.gui.FlowAppMainFrame;
+
 public class ReadStatus implements ActionListener {
 	/*
 	 * 1.记得退出的时候把时间关掉
@@ -41,6 +43,7 @@ public class ReadStatus implements ActionListener {
 			ReadStatus.setWebLost();
 //System.out.println("WebLost="+WebLost);
 			timer=new Timer(1000, this);
+			FlowAppMainFrame.controller.addTimer(timer);
 			if(!WebLost)
 			{	
 				timer.start();		
@@ -90,6 +93,7 @@ System.out.println("user: "+userName
 //			timer.stop();
 			WebLost=true;
 			ReadStatus.setNull();
+			FlowAppMainFrame.controller.stopAllController();
 		}		
 		return br;
 		
@@ -130,7 +134,7 @@ System.out.println("user: "+userName
 			}
 			p=Pattern.compile("\\d{0,3},?\\d{0,3},\\d{1,3}");
 			m=p.matcher(temp);
-			temp1 = "没有找到内容";
+			temp1 = "000,000,000";
 			while(m.find())
 			{
 				temp1=temp.substring(m.start(), m.end());
@@ -216,8 +220,7 @@ System.out.println("user: "+userName
 				return result.substring(0, result.length() - 1);
 				}
 			}catch (Exception e) {
-			// TODO Auto-generated catch block
-//			JOptionPane.showMessageDialog(null, "剩余流量计算错误");
+			JOptionPane.showMessageDialog(null, "剩余流量计算错误");
 			return "";
 		}
 		return  "";
@@ -231,11 +234,6 @@ System.out.println("user: "+userName
 				temp0[i]=Integer.parseInt(temp[i]);		
 			return temp0;
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-//			JOptionPane.showMessageDialog(null, "服务器不稳定无法获取信息,请稍后重试");
-//			loginStatus=-1;
-//			timer.stop();
-//			WebLost=true;
 			int temp1[]= {000,000,000};
 			return temp1; 
 		}
@@ -243,15 +241,6 @@ System.out.println("user: "+userName
 		
 	}
 
-	@Deprecated
-	public void setLoginStatus()
-	{
-		if(totalAmount==""||userName=="")
-			loginStatus=OUT;
-		else
-			loginStatus=IN;
-	}
-	
 	public  void setUseOut()
 	{
 		if(!WebLost)
@@ -278,20 +267,16 @@ System.out.println("user: "+userName
 				String temp="none";
 				while(m.find())
 					temp=input.substring(m.start(),m.end());
-//System.out.println("temp="+temp);
 				String temp2=null;
 				int index=temp.indexOf("display:");
 				if(index!=-1)
 					temp2=temp.substring(index+8, index+9);
-//System.out.println("temp2="+temp2);
 				if(temp2.equals("n"))
 					loginStatus=OUT;
 					else if(temp2.equals("i"))
 						loginStatus=ERROR;
 					else 	loginStatus=IN;
-//System.out.println("loginStatus="+loginStatus);
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
 				loginStatus=IN;
 			}
 		}
@@ -316,8 +301,6 @@ System.out.println("user: "+userName
 		setWebLost();
 		this.setLoginStatus(input);
 		this.setUseOut();
-//System.out.println("login= "+loginStatus);
-//System.out.println("useOut="+useOut);
 	}
 	
 	//采用时间的断网机制

@@ -18,6 +18,7 @@ import javax.swing.JSplitPane;
 
 import lin.component.ButtonAreaPanel;
 import lin.component.FlowDisplayPanel;
+import lin.function.TimerController;
 import lin.readwrite.ConfigAutoLogin;
 import lin.readwrite.ConfigAutoSelect;
 import lin.readwrite.ReadStatus;
@@ -37,6 +38,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	public String[] strMenu= {"账号管理","功能"};
 	public String[] strMenuItem={"修改","删除","设置自登账号","清空"};
 	public String[] strCheckboxItem={"保持最前","精简面板","超极面板"};
+	public static TimerController controller;
 	public static final int LOGNO=2;//设置了自动登录但是没有设置账号
 	public static final int SET=1;//已经设置了自登账号
 	public static final int LAST=-1;//有上次自动记录的能登录的账号
@@ -47,8 +49,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	public static boolean autoSelect;
 	public static boolean inside=false;//内部的组件
 	public FlowAppMainFrame() {
-		// TODO Auto-generated constructor stub
-
+		controller=new TimerController();
 		//GUI界面
 		this.setTitle("流量");
 		this.setBounds(400, 200, 200, 330);

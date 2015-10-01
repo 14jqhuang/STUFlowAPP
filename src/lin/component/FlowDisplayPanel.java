@@ -119,6 +119,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				//				timer.stop();
 			}
 			timer = new Timer(1000, this);
+			FlowAppMainFrame.controller.addTimer(timer);
 			if (ReadStatus.loginStatus == 1)
 				timer.setDelay(readStatus.timer.getDelay());
 			timer.start();

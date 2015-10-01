@@ -83,6 +83,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		
 		//Æô¶¯Ê±¼äÆ÷
 		timer=new Timer(1000, this);
+		FlowAppMainFrame.controller.addTimer(timer);
 		if(!ReadStatus.WebLost)
 			timer.start();
 		else loginButton.setEnabled(false);
