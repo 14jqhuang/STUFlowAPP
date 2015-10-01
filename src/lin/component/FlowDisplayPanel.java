@@ -212,7 +212,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				while(time<ButtonAreaPanel.readAccount.accountList.size())		
 				{
 					String key=ButtonAreaPanel.readAccount.accountList.get(time);
-System.out.println(time);
 					try {
 						new SendLoginRequest().login(ResourcePath.SERVERPATH, 
 								ButtonAreaPanel.readAccount.hashMap.get(key));
@@ -223,15 +222,15 @@ System.out.println(time);
 					
 					//如果全部账号用完了,还是没登上,可能是用户名或密码错误
 					if(ReadStatus.loginStatus==0&&time==ButtonAreaPanel.readAccount.accountList.size())
-					{		JOptionPane.showMessageDialog(this, "已经没有可用的账号了");
+					{		JOptionPane.showMessageDialog(this, "用户名或密码错误,已经没有可用的账号了");
 							FlowAppMainFrame.autoSelect=false;}
 					
 					//如果全部账号用完了,还是没流量
-					if(ReadStatus.useOut&&time==ButtonAreaPanel.readAccount.accountList.size())
+					if(ReadStatus.useOut&&time==(ButtonAreaPanel.readAccount.accountList.size()-1))
 					{	JOptionPane.showMessageDialog(this, "你拥有的账号流量全部用完了");
 						FlowAppMainFrame.autoSelect=false;
 					}
-					//如果登上了而且该账号流量没用完的话,就退出
+					//如果登上了而且该账号流量没用完的话,就退出循环
 					if(!ReadStatus.useOut&&ReadStatus.loginStatus==1)
 						break;
 					time++;
