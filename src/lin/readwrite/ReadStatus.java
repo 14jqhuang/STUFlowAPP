@@ -128,7 +128,7 @@ System.out.println("user: "+userName
 			{
 				temp=input.substring(m.start(), m.end());
 			}
-			p=Pattern.compile("\\d{0,3},?\\d{0,3},\\d{1,3}");
+			p=Pattern.compile("(\\d{0,3},){0,5}\\d{1,3}");
 			m=p.matcher(temp);
 			temp1 = "没有找到内容";
 			while(m.find())
