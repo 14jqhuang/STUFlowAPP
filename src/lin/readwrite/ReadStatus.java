@@ -339,10 +339,15 @@ System.out.println("user: "+userName
 	
 	public static String subNum(String num)
 	{
-		int index=num.indexOf(",");
-		if(index!=-1)
-			return num.substring(0, index);
-		else return num;
+		String temp=num;
+		int index=-1;
+		for(int i=0;i<2;i++)
+		{	index=temp.lastIndexOf(",");
+			if(index!=-1)
+				temp=temp.substring(0, index);
+		}
+System.out.println(temp);
+		return temp;
 	}
 	
 	public void actionPerformed(ActionEvent e) {

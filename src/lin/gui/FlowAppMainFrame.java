@@ -50,9 +50,9 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 
 		//GUI界面
 		this.setTitle("流量");
-		this.setBounds(400, 200, 200, 330);
+		this.setBounds(400, 200, 230, 330);
 		this.setResizable(false);
-	
+		
 		menubar=new JMenuBar();
 		this.setJMenuBar(menubar);
 		menu=new JMenu[strMenu.length];
