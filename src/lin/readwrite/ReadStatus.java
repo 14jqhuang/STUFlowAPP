@@ -132,7 +132,7 @@ System.out.println("user: "+userName
 			{
 				temp=input.substring(m.start(), m.end());
 			}
-			p=Pattern.compile("\\d{0,3},?\\d{0,3},\\d{1,3}");
+			p=Pattern.compile("(\\d{0,3},){0,5}\\d{1,3}");
 			m=p.matcher(temp);
 			temp1 = "000,000,000";
 			while(m.find())
@@ -322,10 +322,15 @@ System.out.println("user: "+userName
 	
 	public static String subNum(String num)
 	{
-		int index=num.indexOf(",");
-		if(index!=-1)
-			return num.substring(0, index);
-		else return num;
+		String temp=num;
+		int index=-1;
+		for(int i=0;i<2;i++)
+		{	index=temp.lastIndexOf(",");
+			if(index!=-1)
+				temp=temp.substring(0, index);
+		}
+System.out.println(temp);
+		return temp;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
