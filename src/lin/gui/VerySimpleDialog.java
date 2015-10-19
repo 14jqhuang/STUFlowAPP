@@ -28,11 +28,43 @@ public class VerySimpleDialog extends JDialog implements ActionListener, WindowL
 	public String getRateData(boolean weblost,String used,String total,boolean useOut)
 	{
 		if (!weblost) {
-			double total_int = Integer.parseInt(ReadStatus.subNum(total));
-			double used_int = Integer.parseInt(ReadStatus.subNum(used));
+		    int result = 0;
+			String total_temp=ReadStatus.subNum(total);
+			String used_temp=ReadStatus.subNum(used);
+System.out.println("total: "+total_temp);
+System.out.println("used: "+used_temp);
+			int index=total_temp.indexOf(",");
 			if (!useOut)
-				return "已用:" + (int) (used_int / total_int * 100) + "%";
-			//			return ""+used_int/total_int;
+			{	if(index==-1)
+				{  try {
+					result=(int) (Double.parseDouble(used_temp) / Double.parseDouble(total_temp)*100);
+System.out.println(result);
+					} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					return "未登录";
+					}
+					return "已用:" + result+ "%";
+				}
+				else {
+					double to=Integer.parseInt(total_temp.substring(0, index))*1000+
+							Integer.parseInt(total_temp.substring(index+1));
+					index=used_temp.indexOf(",");
+					double us;
+					if (index!=-1) {
+						us = Integer.parseInt(used_temp.substring(0, index)) * 1000
+								+ Integer.parseInt(used_temp.substring(index + 1));
+					}
+					else us=Integer.parseInt(used_temp);
+					try {
+						result=(int)(us/to*100);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						return "计算错误";
+					}
+					return  "已用:" + (int) 
+							(us/to* 100) + "%";
+				}
+			}
 			else
 				return "已爆:" + "100%";
 		}else

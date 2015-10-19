@@ -163,6 +163,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		//µÇÂ¼¹¦ÄÜ
 		if(!ReadStatus.WebLost&&e.getSource()==loginButton)
 		{	
+			FlowAppMainFrame.controller.continueAll();
 			String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
 			if(temp!=null&&ReadStatus.loginStatus==ReadStatus.OUT)
 			{	

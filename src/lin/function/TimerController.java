@@ -10,6 +10,7 @@ public class TimerController {
 	
 	public TimerController() {
 		// TODO Auto-generated constructor stub
+		member=new ArrayList<>();
 	}
 	
 	public void addTimer(Timer member)
@@ -20,7 +21,23 @@ public class TimerController {
 	public void stopAllController()
 	{
 		Iterator<Timer> it=member.iterator();
+		Timer temp;
 		while(it.hasNext())
-			it.next().stop();
+			{
+			     temp=it.next();
+		    	if(temp.isRunning())
+				  temp.stop();
+			}
+	}
+	public void continueAll()
+	{
+		Iterator<Timer> it=member.iterator();
+		Timer temp;
+		while(it.hasNext())
+		{
+		   temp=it.next();
+		   if(!temp.isRunning())
+			 temp.restart();
+		}
 	}
 }

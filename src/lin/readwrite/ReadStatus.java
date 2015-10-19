@@ -192,14 +192,17 @@ System.out.println("user: "+userName
 				return ""+0;				
 			else if(loginStatus==IN) {
 				int tempTotal[] = this.getSplitData(this.getTotalAmount(input).split(","));
-				int tempUsed[] = this.getSplitData(this.getUsedAmount(input).split(","));
+				  int tempUsed[];
+				if ((this.getUsedAmount(input).split(",")).length==tempTotal.length)
+				 tempUsed= this.getSplitData(this.getUsedAmount(input).split(","));
+				else tempUsed=this.getSplitData(("0,"+this.getUsedAmount(input)).split(","));
 				tempTotal[tempTotal.length-2]-=1;
-	//for(int i:tempTotal)
+//	for(int i:tempTotal)
 //		System.out.print(i+" ");
-	//System.out.println();
-	//for(int i:tempUsed)
+//	System.out.println();
+//	for(int i:tempUsed)
 //		System.out.print(i+" ");
-	//System.out.println();
+//	System.out.println();
 				int tempResult[] = new int[tempTotal.length];
 				String result = "";
 				for (int i = tempTotal.length-1; i >= 0; i--) {
@@ -221,6 +224,7 @@ System.out.println("user: "+userName
 				}
 			}catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Ê£ÓàÁ÷Á¿¼ÆËã´íÎó");
+			e.printStackTrace();
 			return "";
 		}
 		return  "";
@@ -329,7 +333,7 @@ System.out.println("user: "+userName
 			if(index!=-1)
 				temp=temp.substring(0, index);
 		}
-System.out.println(temp);
+//System.out.println(temp);
 		return temp;
 	}
 	
