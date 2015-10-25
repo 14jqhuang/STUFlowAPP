@@ -36,6 +36,7 @@ public class TimerController {
 		while(it.hasNext())
 		{
 		   temp=it.next();
+		   temp.start();
 		   if(!temp.isRunning())
 			 temp.restart();
 		}

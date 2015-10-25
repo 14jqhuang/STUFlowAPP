@@ -38,6 +38,8 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	public  JCheckBox autoSelectChBox;
 	private JButton alarmButton;
 	public AddAccountDialog accountDialog;
+	private long clicktime=0;
+	private static SendLoginRequest loginRequest;
 	public static boolean autoLogin=false;
 	public static boolean hasDefault;
 	public static ReadAccount readAccount;
@@ -49,7 +51,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	//记录是不是初始化的时候的激发的自动选择
 	public 	int i=0;
 	public ButtonAreaPanel() {
-		// TODO Auto-generated constructor stub
 		//读写数据
 		try {
 			readAccount=new ReadAccount();
@@ -163,20 +164,44 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		//登录功能
 		if(!ReadStatus.WebLost&&e.getSource()==loginButton)
 		{	
+			clicktime=System.currentTimeMillis();
 			FlowAppMainFrame.controller.continueAll();
 			String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
-			if(temp!=null&&ReadStatus.loginStatus==ReadStatus.OUT)
+			if(temp!=null&&
+					(ReadStatus.loginStatus==ReadStatus.OUT))
 			{	
 				params=readAccount.hashMap.get(temp);
 				try {
-					new SendLoginRequest().login(ResourcePath.SERVERPATH	, params);
+					if(loginRequest==null)
+						try {
+							loginRequest=new SendLoginRequest();
+						} catch (IOException ex) {
+							// TODO Auto-generated catch block
+							ex.printStackTrace();
+						}
+					loginRequest.login(ResourcePath.SERVERPATH	, params);
+System.out.println("已发送登录信息:"+params);
 					}catch (IOException e1) {
-					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "发送登录信息失败");
 				}
 			}
 			else JOptionPane.showMessageDialog(null, "请先退出已登录的账号");
 		}
+		
+		//如果过了0.5s还没有登录上的话,就是用户名或密码错误
+		if(clicktime!=0&&System.currentTimeMillis()-clicktime>500)
+		{
+			if(ReadStatus.loginStatus==0)
+			{	ReadStatus.loginStatus=ReadStatus.ERROR;
+			}
+		}
+		//再过3s恢复为未登录的状态
+		if(ReadStatus.loginStatus==ReadStatus.ERROR&&System.currentTimeMillis()-clicktime>3000)
+		{	ReadStatus.loginStatus=ReadStatus.OUT;
+			clicktime=0;
+		}
+		
+//System.out.println("loginstatus before check:"+ReadStatus.loginStatus);	
 		
 		//登录按钮的检查
 		if(!ReadStatus.WebLost)

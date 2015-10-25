@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-
 import lin.gui.FlowAppMainFrame;
 
 public class ReadStatus implements ActionListener {
@@ -38,10 +37,8 @@ public class ReadStatus implements ActionListener {
 	public  Timer timer;
 	
 	public ReadStatus() throws IOException {
-		// TODO Auto-generated constructor stub
 		try {
 			ReadStatus.setWebLost();
-//System.out.println("WebLost="+WebLost);
 			timer=new Timer(1000, this);
 			FlowAppMainFrame.controller.addTimer(timer);
 			if(!WebLost)
@@ -50,13 +47,17 @@ public class ReadStatus implements ActionListener {
 				input=this.getStringBuilder(openStream(ResourcePath.SERVERPATH));
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			loginStatus=OUT;
 			ReadStatus.setNull();
 		}
 	}
 	
+	/**
+	 * 获取网页的关于流量的数据,并赋给相应的成员变量
+	 * @param input 网页的源代码数据
+	 * @throws IOException
+	 */
 	public  void setStatus(StringBuilder input) throws IOException
 	{
 		if(loginStatus==IN)
@@ -71,6 +72,9 @@ System.out.println("user: "+userName
 		+"\nremain: "+remainAmount);
 	}
 	
+	/**
+	 * 全部关于流量的成员变量赋为""
+	 */
 	public  static void setNull()
 	{
 		userName="";
@@ -78,7 +82,12 @@ System.out.println("user: "+userName
 		totalAmount="";
 		remainAmount="";
 	}	
-	
+	/**
+	 * 获取网页的字符流
+	 * @param pathname 网页的URL
+	 * @return 返回一个BufferReader对象
+	 * @throws IOException 如果抛出该异常则认为是断网,停止所有的时间器
+	 */
 	public BufferedReader openStream(String pathname) throws IOException
 	{
 		BufferedReader br=null;
@@ -98,7 +107,10 @@ System.out.println("user: "+userName
 		return br;
 		
 	}
-	
+	/**
+	 * 从文本文件里面获取数据,仅供测试使用
+	 */
+	@Deprecated
 	public  BufferedReader openFile(String path) throws FileNotFoundException
 	{
 		BufferedReader br=null;
@@ -107,7 +119,12 @@ System.out.println("user: "+userName
 		br=new BufferedReader(new InputStreamReader(in));		
 		return br;
 	}
-	
+	/**
+	 * 获取BufferReader流中的数据
+	 * @param br 输入一个BufferReader对象,从中读取网页的数据
+	 * @return 返回一个SringBuilder对象
+	 * @throws IOException
+	 */
 	public StringBuilder getStringBuilder(BufferedReader br) throws IOException
 	{
 		if (!WebLost) {
@@ -121,6 +138,12 @@ System.out.println("user: "+userName
 		}else return new StringBuilder("");
 	}
 	
+	/**
+	 * 截取输入范围内的流量数据
+	 * @param input 网页的源代码数据
+	 * @param pattern 输入正则表达式缩小匹配流量数据的范围
+	 * @return 返回输入中符合流量格式的字符串
+	 */
 	public  String cutNumberByMacther(StringBuilder input,String pattern)
 	{
 		String temp1 = null;
@@ -173,16 +196,30 @@ System.out.println("user: "+userName
 		}else return "";
 	}
 	
+	/**
+	 * 通过正则表达式获取总的流量
+	 * @param input 网页获取的源代码的文本
+	 * @return 总流量的字符串
+	 */
 	public  String getTotalAmount(StringBuilder input)
 	{
 		return cutNumberByMacther(input, "<td class=\\\"text3\\\" id=\\\"tb\\\">.+?</td>");
 	}
 	
+	/**
+	 * 通过正则表达式获取已使用的流量
+	 * @param input 网页获取源代码的文本
+	 * @return 已使用流量的字符串
+	 */
 	public  String getUsedAmount(StringBuilder input)
 	{
 		return cutNumberByMacther(input, "<td class=\\\"text3\\\" id=\\\"ub\\\">.+?</td>");		
 	}
-	
+	/**
+	 * 通过已使用和总的流量计算剩余的流量
+	 * @param 
+	 * @return 返回流量的字符串000,000,000
+	 */
 	public  String getRemainAmount() throws IOException
 	{
 //		this.setUseOut();
@@ -230,6 +267,12 @@ System.out.println("user: "+userName
 		return  "";
 	}
 	
+	/**
+	 * 将字符串数组转换成整型数组
+	 * @param temp 数字字符串数组
+	 * @return 返回一个整型数组
+	 * @exception 发生错误的话返回输入的数组长度的整型数组值
+	 */
 	public int[] getSplitData(String[] temp)
 	{
 		try {
@@ -238,13 +281,17 @@ System.out.println("user: "+userName
 				temp0[i]=Integer.parseInt(temp[i]);		
 			return temp0;
 		} catch (NumberFormatException e) {
-			int temp1[]= {000,000,000};
+			int temp1[]=new int[temp.length];
 			return temp1; 
 		}
 		
 		
 	}
 
+	/**
+	 *用已使用流量和总流量对比,看是不是用完了流量<br>
+	 *将给结果反馈到Useout变量
+	 */
 	public  void setUseOut()
 	{
 		if(!WebLost)
@@ -260,32 +307,32 @@ System.out.println("user: "+userName
 			}
 		}
 	}
-	
+	/**
+	 * 设置登录的状态,IN指的是登录成功,ERROR指的是密码或用户名错误<br>
+	 * OUT指的是还没有发送登录信息
+	 * @param input 网页源代码的内容
+	 * @return 赋给loginStatus字段相应的值
+	 */
 	 public  void setLoginStatus(StringBuilder input)
 	{
 		if(!WebLost)
 		{try {
 				this.refreshInput();
-				Pattern p=Pattern.compile("<h3><center><font color=\\\"red\\\" style=\\\"display:[a-z]*?\\\">");
-				Matcher m=p.matcher(input);
-				String temp="none";
-				while(m.find())
-					temp=input.substring(m.start(),m.end());
-				String temp2=null;
-				int index=temp.indexOf("display:");
-				if(index!=-1)
-					temp2=temp.substring(index+8, index+9);
-				if(temp2.equals("n"))
-					loginStatus=OUT;
-					else if(temp2.equals("i"))
-						loginStatus=ERROR;
-					else 	loginStatus=IN;
+				if(input.indexOf("Welcome")!=-1)
+					loginStatus=1;
+				else if(loginStatus!=ERROR&&input.indexOf("display:none")!=-1)
+						loginStatus=0;
 			} catch (NullPointerException e) {
 				loginStatus=IN;
 			}
+//System.out.println("loginstatus="+loginStatus);
 		}
 	}
 
+	 /**
+	  * 刷新网页的数据的内容<br>
+	  * 将值赋给成员变量input
+	  */
 	public void refreshInput()
 	{
 		try {
@@ -299,6 +346,9 @@ System.out.println("user: "+userName
 		}
 	}
 	
+	/**
+	 * 设置loginStatus和useOut的值
+	 */
 	public void setWebStatus()
 	{
 		ReadStatus.setNull();
@@ -324,28 +374,30 @@ System.out.println("user: "+userName
 		WebLost=false;
 	}
 	
+	/**
+	 * 截取第一个逗号前面的流量数据,用来显示在精简面板里面<br>
+	 * 即得到单位是M的整数数据
+	 * @param num 一个以逗号","分隔的数字字符串
+	 * @return 返回第一个逗号之前的数字字符串
+	 */
 	public static String subNum(String num)
 	{
 		String temp=num;
 		int index=-1;
 		for(int i=0;i<2;i++)
 		{	index=temp.lastIndexOf(",");
-			if(index!=-1)
-				temp=temp.substring(0, index);
+			temp=temp.substring(0, index);
 		}
-//System.out.println(temp);
+System.out.println(temp);
 		return temp;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		setWebStatus();
-//System.out.println("loginStatus="+loginStatus);
 		try {
 			if(loginStatus==IN)
 				setStatus(input);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "网页打不开啊..隔壁老王\n"+this.getClass().getName());
 		}
 	}

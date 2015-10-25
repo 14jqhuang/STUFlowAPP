@@ -150,7 +150,11 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	}
     }
     
-    //设置状态标签显示的内容 包括已登录,未登录,用户名或密码错误,流量已用完,已断网
+    /**
+     * 设置状态标签显示的内容 包括已登录,未登录,用户名或密码错误,流量已用完,已断网
+     * @param loginstatus 登录的状态
+     * @param useOut 标识是否用完流量的布尔变量
+     */
     public void setLoginStatus(int loginstatus,boolean useOut)
     {
     	if(!ReadStatus.WebLost)	
@@ -164,16 +168,18 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				statusLabel.setForeground(Color.red);
 				statusLabel.setText("未登录");
 				logoutButton.setEnabled(false);
-			}else {
-				statusLabel.setForeground(Color.blue);
-				statusLabel.setText("用户名或密码错误");
+			}else if(loginstatus==-1){
 				logoutButton.setEnabled(false);
+				ButtonAreaPanel.loginButton.setEnabled(false);
+				statusLabel.setForeground(Color.blue);
+				statusLabel.setText("用户名或密码错误");	
 			}
 			if(useOut)
 			{
 				statusLabel.setForeground(Color.blue);
 				statusLabel.setText("流量已用完");
-				logoutButton.setEnabled(false);
+				logoutButton.setEnabled(true);
+				
 			}
 			if(ButtonAreaPanel.autoLogin)
 			{	logoutButton.setEnabled(false);
