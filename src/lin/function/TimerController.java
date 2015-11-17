@@ -9,7 +9,7 @@ public class TimerController {
 	private ArrayList<Timer> member;
 	
 	public TimerController() {
-		// TODO Auto-generated constructor stub
+		member=new ArrayList<>();
 	}
 	
 	public void addTimer(Timer member)
