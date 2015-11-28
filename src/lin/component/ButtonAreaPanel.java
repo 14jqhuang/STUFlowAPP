@@ -16,17 +16,17 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
-import lin.function.SendLoginRequest;
-import lin.function.PlayMusic;
-import lin.gui.AddAccountDialog;
-import lin.gui.AlarmSettingDialog;
-import lin.gui.FlowAppMainFrame;
-import lin.gui.SetDefaultLoginAccount;
-import lin.readwrite.ConfigAutoLogin;
-import lin.readwrite.ConfigAutoSelect;
-import lin.readwrite.ReadAccount;
-import lin.readwrite.ReadStatus;
-import lin.readwrite.ResourcePath;
+import function.account_operate.ReadAccount;
+import function.config_auto_file.ConfigAutoLogin;
+import function.config_auto_file.ConfigAutoSelect;
+import function.read_data_from_website.ReadStatus;
+import gui.account_dialog.AddAccountDialog;
+import gui.account_dialog.SetDefaultLoginAccount;
+import gui.alarm_dialog.AlarmSettingDialog;
+import gui.alarm_dialog.PlayMusic;
+import gui.mainfraim.FlowAppMainFrame;
+import resource.webserver.ResourcePath;
+import tool.SendLogRequest;
 
 @SuppressWarnings("serial")
 public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListener {
@@ -168,7 +168,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			{	
 				params=readAccount.hashMap.get(temp);
 				try {
-					new SendLoginRequest().login(ResourcePath.SERVERPATH	, params);
+					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "·¢ËÍµÇÂ¼ÐÅÏ¢Ê§°Ü");
@@ -200,7 +200,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 					setDefaultLoginAccount=new SetDefaultLoginAccount(readAccount.accountArrary, new ConfigAutoLogin());
 				params=readAccount.hashMap.get(defaultAccount);
 				try {
-					new SendLoginRequest().login(ResourcePath.SERVERPATH	, params);
+					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
 						// TODO Auto-generated catch block
 						JOptionPane.showMessageDialog(null, "·¢ËÍµÇÂ¼ÐÅÏ¢Ê§°Ü");	}

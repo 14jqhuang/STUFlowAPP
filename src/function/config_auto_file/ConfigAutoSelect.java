@@ -1,0 +1,110 @@
+package function.config_auto_file;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+import resource.webserver.ResourcePath;
+
+public class ConfigAutoSelect implements ResourcePath{
+
+	private BufferedReader br;
+	private PrintWriter pw;
+	
+	public ConfigAutoSelect() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public BufferedReader openFile() throws IOException
+	{	
+		try {
+			File f=new File(decode(ResourcePath.CONFIG1PATH));
+//System.out.println("exist="+f.exists());
+			if(!f.exists())
+				f.createNewFile();
+			br=new BufferedReader(new FileReader(f));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return br;
+	}
+	
+	public boolean readModel()
+	{
+		try {
+			openFile();
+			String temp="n";
+			temp=br.readLine();
+//System.out.println(temp);
+			if(temp==null||temp.equals(""))
+			{
+				br.close();
+				return  false;
+			}
+			String model=temp.substring(0, 1);
+			if(model.equals("y"))
+			{	br.close();
+				return true;
+			}
+			else {
+				br.close();
+				return false;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void writeY() throws UnsupportedEncodingException
+	{
+		try {
+			File f=new File(decode(ResourcePath.CONFIG1PATH));
+			pw=new PrintWriter(new FileOutputStream(f));
+			pw.println("y");
+			pw.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeN() throws UnsupportedEncodingException
+	{
+		try {
+			File f=new File(decode(ResourcePath.CONFIG1PATH));
+			pw=new PrintWriter(new FileOutputStream(f));
+			pw.println("n");
+			pw.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Deprecated
+	public boolean delete()
+	{
+		File f=new File(ResourcePath.CONFIG1PATH);
+		if(f.exists())
+			return f.delete();
+		else return true;
+					
+	}
+	
+
+	@Override
+	public String decode(String path) throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		 return URLDecoder.decode(path, "utf-8");
+	}
+
+}

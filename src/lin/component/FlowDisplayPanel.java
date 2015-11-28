@@ -17,11 +17,11 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
-import lin.function.SendLoginRequest;
-import lin.gui.FlowAppMainFrame;
-import lin.readwrite.ConfigAutoLogin;
-import lin.readwrite.ReadStatus;
-import lin.readwrite.ResourcePath;
+import function.config_auto_file.ConfigAutoLogin;
+import function.read_data_from_website.ReadStatus;
+import gui.mainfraim.FlowAppMainFrame;
+import resource.webserver.ResourcePath;
+import tool.SendLogRequest;
 
 @SuppressWarnings("serial")
 public class FlowDisplayPanel extends JPanel implements ActionListener {
@@ -113,7 +113,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			try {
 				readStatus = new ReadStatus();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "初始化readStatus失败");
 				//			if(timer!=null)
 				//				timer.stop();
@@ -202,7 +201,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			//如果是登录着,发送退出的信息
 			if(ReadStatus.loginStatus==1)
 				try {
-					new SendLoginRequest().logout(ResourcePath.SERVERPATH);
+					SendLogRequest.logout(ResourcePath.SERVERPATH);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -213,7 +212,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				{
 					String key=ButtonAreaPanel.readAccount.accountList.get(time);
 					try {
-						new SendLoginRequest().login(ResourcePath.SERVERPATH, 
+						SendLogRequest.login(ResourcePath.SERVERPATH, 
 								ButtonAreaPanel.readAccount.hashMap.get(key));
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
@@ -251,7 +250,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				{	new ConfigAutoLogin().write_1Name(ReadStatus.userName);
 					FlowAppMainFrame.autologin=-1;
 				}
-				new SendLoginRequest().logout(ResourcePath.SERVERPATH);		
+				SendLogRequest.logout(ResourcePath.SERVERPATH);		
 				//更新显示的数据
 				this.setTexts(ReadStatus.userName,ReadStatus.usedAmount, 
 						ReadStatus.totalAmount, ReadStatus.remainAmount,ReadStatus.loginStatus);
