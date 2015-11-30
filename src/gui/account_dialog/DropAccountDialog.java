@@ -7,26 +7,36 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import function.account_operate.DropAccount;
+import function.account_operate.AccountOperator;
+import function.account_operate.DropUser;
+import lin.component.ButtonAreaPanel;
 
 @SuppressWarnings("serial")
 public class DropAccountDialog extends UpdateAccountDialog implements ActionListener {
+	
+	private AccountOperator dropUser;
+	
 	public DropAccountDialog(JFrame jframe) {
-		// TODO Auto-generated constructor stub
 		super(jframe);
 		this.sureButton.removeActionListener(sureButton.getAction());
 		this.sureButton.addActionListener(this);	
 	}
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getActionCommand().equals("确定"))
 		{	
 			try {
-				new DropAccount(this.accountSelectCombo.getSelectedIndex());
+				dropUser= new DropUser(ButtonAreaPanel.Account
+						,this.accountSelectCombo.getSelectedIndex());
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			
+			try {
+				ButtonAreaPanel.Account= dropUser.operate();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			
 			JOptionPane.showMessageDialog(this, "删除成功");
 			super.dispose();
 		}else {

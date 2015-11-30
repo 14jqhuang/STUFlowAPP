@@ -1,4 +1,4 @@
-package tool;
+package other.tool;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

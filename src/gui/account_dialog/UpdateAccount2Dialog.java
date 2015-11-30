@@ -4,7 +4,6 @@ import java.awt.Dialog;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.JButton;
@@ -15,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import function.account_operate.ReadAccount;
-import function.account_operate.UpdateAccount;
+import function.account_operate.AccountOperator;
+import function.account_operate.UpdateUser;
 import lin.component.ButtonAreaPanel;
 
 /*
@@ -24,13 +23,15 @@ import lin.component.ButtonAreaPanel;
  */
 @SuppressWarnings("serial")
 public class UpdateAccount2Dialog extends JDialog implements ActionListener {
-	public JTextField userNameInput;
-	public JPasswordField passwordInput;
-	public JButton sureButton;
-	public JButton cancalButton;
-	public  int index;
+	private JTextField userNameInput;
+	private JPasswordField passwordInput;
+	private JButton sureButton;
+	private JButton cancalButton;
+	private  int index;
+	private AccountOperator updateAccount;
+	
 	public UpdateAccount2Dialog(int index)  {
-		// TODO Auto-generated constructor stub
+
 		this.setAlwaysOnTop(true);
 		this.setTitle("修改账号");
 		this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -73,15 +74,18 @@ public class UpdateAccount2Dialog extends JDialog implements ActionListener {
 					(new String(passwordInput.getPassword())).trim().length()!=0)
 			{	
 				try {
-					new UpdateAccount( index, userNameInput.getText(),
+					updateAccount= new UpdateUser(ButtonAreaPanel.Account,
+							index, userNameInput.getText(),
 							new String(passwordInput.getPassword()));
 				} catch (UnsupportedEncodingException e2) {
 					e2.printStackTrace();
 				}
 				this.dispose();
 				try {
-					ButtonAreaPanel.readAccount=new ReadAccount();
-				} catch (IOException e1) {	};
+					ButtonAreaPanel.Account= updateAccount.operate();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 				JOptionPane.showMessageDialog(this, "修改成功");
 			}
 			else JOptionPane.showMessageDialog(this, "请输入正确的内容");

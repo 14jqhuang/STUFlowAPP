@@ -26,7 +26,7 @@ import gui.simplify_dialog.SimplifyDialog;
 import gui.verysimplfy_dialog.VerySimpleDialog;
 import lin.component.ButtonAreaPanel;
 import lin.component.FlowDisplayPanel;
-import tool.TimerController;
+import other.tool.TimerController;
 
 @SuppressWarnings("serial")
 public class FlowAppMainFrame extends JFrame implements ActionListener, ItemListener, WindowListener{
@@ -166,9 +166,9 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		
 		//设置自动登录的账号
 		if(e.getActionCommand().equals("设置自登账号")) {
-			if (ButtonAreaPanel.readAccount.accountList.size()!=0) {
+			if (ButtonAreaPanel.Account.accountList.size()!=0) {
 				try {
-					new SetDefaultLoginAccount(this,ButtonAreaPanel.readAccount.accountArrary, new ConfigAutoLogin());
+					new SetDefaultLoginAccount(this,ButtonAreaPanel.Account.accountArrary, new ConfigAutoLogin());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -179,10 +179,10 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		//修改选项
 		if(e.getActionCommand().equals("修改"))
 		{	
-			if (ButtonAreaPanel.readAccount.accountList.size()!=0) {
+			if (ButtonAreaPanel.Account.accountList.size()!=0) {
 				new UpdateAccountDialog(this);
 				buttonPanel.accountSelectCombo.removeAllItems();
-				for (String c : ButtonAreaPanel.readAccount.accountList)
+				for (String c : ButtonAreaPanel.Account.accountList)
 					buttonPanel.accountSelectCombo.addItem(c);
 			}else JOptionPane.showMessageDialog(this, "没有可更改的账号");
 		}
@@ -190,10 +190,10 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		//删除选项
 		if(e.getActionCommand().equals("删除"))
 		{
-			if (ButtonAreaPanel.readAccount.accountList.size()!=0) {
+			if (ButtonAreaPanel.Account.accountList.size()!=0) {
 				new DropAccountDialog(this);
 				buttonPanel.accountSelectCombo.removeAllItems();
-				for (String c : ButtonAreaPanel.readAccount.accountList)
+				for (String c : ButtonAreaPanel.Account.accountList)
 					buttonPanel.accountSelectCombo.addItem(c);
 			}else JOptionPane.showMessageDialog(this, "没有可删除的账号");
 		}
@@ -201,7 +201,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		//清空
 		if(e.getActionCommand().equals("清空"))
 		{
-			if (ButtonAreaPanel.readAccount.accountList.size()!=0) {
+			if (ButtonAreaPanel.Account.accountList.size()!=0) {
 				if (JOptionPane.showConfirmDialog(this, "确定要清空?", "清空",
 						JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 					File f = new File(this.getClass().getClassLoader().getResource("").getPath() + "account.txt");

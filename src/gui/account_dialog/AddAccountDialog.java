@@ -4,7 +4,6 @@ import java.awt.Dialog;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.JButton;
@@ -15,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import function.account_operate.ReadAccount;
-import function.account_operate.WriteAccount;
+import function.account_operate.AccountOperator;
+import function.account_operate.AddUser;
 import lin.component.ButtonAreaPanel;
 
 @SuppressWarnings("serial")
@@ -25,15 +24,13 @@ public class AddAccountDialog extends JDialog implements ActionListener {
 	public JPasswordField passwordInput;
 	private JButton sureButton;
 	private JButton cancalButton;
-	public  WriteAccount writeAccount;
+	public  AccountOperator addAccount;
 	public AddAccountDialog() throws UnsupportedEncodingException  {
-		// TODO Auto-generated constructor stub
 		this.setAlwaysOnTop(true);
 		this.setTitle("添加账号");
 		this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		this.setBounds(400, 200, 180, 180);
 
-		writeAccount=new WriteAccount();
 		JPanel panel1=new JPanel();		
 		panel1.add(new JLabel("用户名:"));
 		panel1.add((userNameInput=new JTextField(15)));
@@ -61,21 +58,21 @@ public class AddAccountDialog extends JDialog implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getActionCommand()=="取消")
 			this.dispose();
 		if(e.getSource()==sureButton)
 		{
+			//将用户名和密码写入文件并更新账号列表
 			if(userNameInput.getText().trim().length()>=4&&
 					(new String(passwordInput.getPassword())).trim().length()!=0)
-			{	writeAccount.writeAccount(writeAccount.out, 
-					userNameInput.getText(), new String(passwordInput.getPassword()));
-				writeAccount.out.flush();
-				writeAccount.out.close();
-				this.dispose();
+			{	addAccount=new AddUser(ButtonAreaPanel.Account,
+					"@"+	userNameInput.getText()+"&"+new String(passwordInput.getPassword()));
 				try {
-					ButtonAreaPanel.readAccount=new ReadAccount();
-				} catch (IOException e1) {	};
+					ButtonAreaPanel.Account=addAccount.operate();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				this.dispose();
 			}
 			else JOptionPane.showMessageDialog(this, "请输入正确的内容");
 		}

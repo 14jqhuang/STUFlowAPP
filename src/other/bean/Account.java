@@ -1,4 +1,4 @@
-package function.account_operate;
+package other.bean;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,17 +15,29 @@ import javax.swing.JOptionPane;
 
 import resource.webserver.ResourcePath;
 
-public class ReadAccount implements ResourcePath{
+//作为一个bean来使用,静态声明
+public class Account implements ResourcePath{
 	
 	public  String jarPath;
 	public HashMap<String,String> hashMap;
 	public ArrayList<String> accountList;
 	public String[] accountArrary;
 	private BufferedReader br;
-	public ReadAccount() throws IOException {
-		// TODO Auto-generated constructor stub
+	
+	/**
+	 * 构造的时候就已经从文件中读取了
+	 * @throws IOException
+	 */
+	public Account() throws IOException {
+		
 		accountList=new ArrayList<String>();
 		hashMap=new HashMap<String,String>();
+		readAccount();
+	}
+	
+	//读取文件中的用户名
+	private void readAccount() throws IOException
+	{
 		try {
 			File f=new File(decode(ResourcePath.ACCOUNTPATH));
 			if(!f.exists())
@@ -33,8 +45,6 @@ public class ReadAccount implements ResourcePath{
 			br=new BufferedReader(new InputStreamReader(new FileInputStream(f)));
 			this.setHashMap(br);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-//			JOptionPane.showMessageDialog(null, "首次运行请先添加账户");
 			accountList.add("请添加账户");
 		}
 		accountArrary=new String[accountList.size()];
@@ -42,7 +52,8 @@ public class ReadAccount implements ResourcePath{
 		br.close();
 	}
 	
-	public void setHashMap(BufferedReader br) throws IOException
+	//设置用户名与密码对应的hash表
+	private void setHashMap(BufferedReader br) throws IOException
 	{
 		try {
 			String line;
@@ -52,18 +63,20 @@ public class ReadAccount implements ResourcePath{
 					accountList.add(this.getAccountName(line).trim());
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "找不到指定的文件\n"+this.getClass().getName());
 		}
 		
 	}
-	public String getAccountName(String line)
+	
+	//获取用户名,从流中读取到的字符串获取用户名
+	private String getAccountName(String line)
 	{
 		String temp[]=line.split("&");
 		int index=temp[0].indexOf("=");
 		return temp[0].substring(index+1);
 	}
 	
+	//更改账号
 	public void Update(int removeInt,String newname,String newpassword)
 	{
 		if (accountList.size()!=0) {
@@ -77,6 +90,7 @@ public class ReadAccount implements ResourcePath{
 		}
 	}
 	
+	//删除账号
 	public void drop(int removeInt)
 	{
 		if (accountList.size()!=0) {
@@ -92,9 +106,9 @@ public class ReadAccount implements ResourcePath{
 		}
 	}
 
+	//对路径进行编码
 	@Override
 	public String decode(String path) throws UnsupportedEncodingException {
-		// TODO Auto-generated method stub
 		return URLDecoder.decode(path, "utf-8");
 	}
 }

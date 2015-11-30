@@ -20,8 +20,8 @@ import javax.swing.border.TitledBorder;
 import function.config_auto_file.ConfigAutoLogin;
 import function.read_data_from_website.ReadStatus;
 import gui.mainfraim.FlowAppMainFrame;
+import other.tool.SendLogRequest;
 import resource.webserver.ResourcePath;
-import tool.SendLogRequest;
 
 @SuppressWarnings("serial")
 public class FlowDisplayPanel extends JPanel implements ActionListener {
@@ -208,24 +208,24 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				}
 			//用别的账号登录
 			if(ReadStatus.loginStatus==0)
-				while(time<ButtonAreaPanel.readAccount.accountList.size())		
+				while(time<ButtonAreaPanel.Account.accountList.size())		
 				{
-					String key=ButtonAreaPanel.readAccount.accountList.get(time);
+					String key=ButtonAreaPanel.Account.accountList.get(time);
 					try {
 						SendLogRequest.login(ResourcePath.SERVERPATH, 
-								ButtonAreaPanel.readAccount.hashMap.get(key));
+								ButtonAreaPanel.Account.hashMap.get(key));
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					
 					//如果全部账号用完了,还是没登上,可能是用户名或密码错误
-					if(ReadStatus.loginStatus==0&&time==ButtonAreaPanel.readAccount.accountList.size())
+					if(ReadStatus.loginStatus==0&&time==ButtonAreaPanel.Account.accountList.size())
 					{		JOptionPane.showMessageDialog(this, "用户名或密码错误,已经没有可用的账号了");
 							FlowAppMainFrame.autoSelect=false;}
 					
 					//如果全部账号用完了,还是没流量
-					if(ReadStatus.useOut&&time==(ButtonAreaPanel.readAccount.accountList.size()-1))
+					if(ReadStatus.useOut&&time==(ButtonAreaPanel.Account.accountList.size()-1))
 					{	JOptionPane.showMessageDialog(this, "你拥有的账号流量全部用完了");
 						FlowAppMainFrame.autoSelect=false;
 					}

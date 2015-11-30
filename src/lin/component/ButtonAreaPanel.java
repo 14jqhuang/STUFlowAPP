@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
-import function.account_operate.ReadAccount;
 import function.config_auto_file.ConfigAutoLogin;
 import function.config_auto_file.ConfigAutoSelect;
 import function.read_data_from_website.ReadStatus;
@@ -25,8 +24,9 @@ import gui.account_dialog.SetDefaultLoginAccount;
 import gui.alarm_dialog.AlarmSettingDialog;
 import gui.alarm_dialog.PlayMusic;
 import gui.mainfraim.FlowAppMainFrame;
+import other.bean.Account;
+import other.tool.SendLogRequest;
 import resource.webserver.ResourcePath;
-import tool.SendLogRequest;
 
 @SuppressWarnings("serial")
 public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListener {
@@ -40,38 +40,48 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	public AddAccountDialog accountDialog;
 	public static boolean autoLogin=false;
 	public static boolean hasDefault;
-	public static ReadAccount readAccount;
+	public static Account Account;
 	public static boolean alarmhasSet=false;
 	public String params;
 	public Timer timer;
 	public PlayMusic music;
 	public SetDefaultLoginAccount setDefaultLoginAccount;
+	
 	//记录是不是初始化的时候的激发的自动选择
 	public 	int i=0;
+	
 	public ButtonAreaPanel() {
-		// TODO Auto-generated constructor stub
-		//读写数据
-		try {
-			readAccount=new ReadAccount();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(this, "读取文件失败");
-		}
 		
+		initAccount();
+		
+		drawGui();
+
+		setListener();
+		
+		startTimer();
+		
+	}
+	
+	//初始化账号信息
+	private void initAccount()
+	{
+		try {
+			Account=new Account();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "读取文件失败");
+		}		
+	}
+	
+	//初始化gui界面
+	private void drawGui()
+	{
 		this.setLayout(new GridLayout(3, 2));
 		alarmButton=new JButton("设置提醒");
-		alarmButton.setActionCommand("设置提醒");
-		alarmButton.addActionListener(this);
 		addUser=new JButton("添加账户");
-		addUser.addActionListener(this);
 		loginButton=new JButton("登录");
-		loginButton.addActionListener(this);
 		autoLoginChBox=new JCheckBox("自动登录");
 		autoSelectChBox=new JCheckBox("自动切换");
-		autoLoginChBox.addItemListener(this);
-		autoSelectChBox.addItemListener(this);
-		accountSelectCombo=new JComboBox<String>(readAccount.accountArrary);
-		accountSelectCombo.addActionListener(this);
+		accountSelectCombo=new JComboBox<String>(Account.accountArrary);
 		this.setBorder(new TitledBorder("功能区"));
 		this.setLayout(new GridLayout(3, 2));
 		this.add(alarmButton);
@@ -80,28 +90,38 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		this.add(loginButton);
 		this.add(autoLoginChBox);
 		this.add(autoSelectChBox);
+	}
+	
+	//启动时间器
+	private void startTimer()
+	{
 		
-		//启动时间器
 		timer=new Timer(1000, this);
 		FlowAppMainFrame.controller.addTimer(timer);
 		if(!ReadStatus.WebLost)
 			timer.start();
 		else loginButton.setEnabled(false);
-//System.out.println("loginState="+ReadStatus.loginStatus);
 		if(ReadStatus.loginStatus==ReadStatus.IN)
-			loginButton.setEnabled(false);
-		
-//System.out.println("Class= "+this.getClass().getResource("").getPath());
-//System.out.println("ClassLoad="+this.getClass().getClassLoader().getResource("").getPath());
-//System.out.println("SystemLoad="+ClassLoader.getSystemResource("").getPath());
+			loginButton.setEnabled(false);		
+				
 	}
 	
+	//设置触发器
+	private void setListener()
+	{
+		alarmButton.addActionListener(this);
+		addUser.addActionListener(this);
+		loginButton.addActionListener(this);
+		accountSelectCombo.addActionListener(this);
+		autoLoginChBox.addItemListener(this);
+		autoSelectChBox.addItemListener(this);
+	}
+	
+	//实现按钮和时间器的触发器
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		String action=e.getActionCommand();
 		if(action==null)
 			action="none";
-//System.out.println("Set?  "+alarmhasSet+"\nAmount="+Integer.parseInt(ReadStatus.subNum(ReadStatus.usedAmount)));
 		
 		//初始化自动登录按钮
 		if(FlowAppMainFrame.autologin>0)
@@ -117,7 +137,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		if(!ReadStatus.WebLost&&(alarmhasSet)&&(Integer.parseInt(ReadStatus.subNum(ReadStatus.usedAmount))
 				>=AlarmSettingDialog.alarmAmount))
 		{
-//System.out.println("provoke!");
 			music=new PlayMusic(AlarmSettingDialog.musicPath,true);
 			music.play();
 			music.showControlPanel(null, "流量警告");
@@ -155,7 +174,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			}
 			if(accountSelectCombo!=null)
 				accountSelectCombo.removeAllItems();
-			for(String item:readAccount.accountArrary)
+			for(String item:Account.accountArrary)
 				accountSelectCombo.addItem(item);
 		}
 		
@@ -166,7 +185,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
 			if(temp!=null&&ReadStatus.loginStatus==ReadStatus.OUT)
 			{	
-				params=readAccount.hashMap.get(temp);
+				params=Account.hashMap.get(temp);
 				try {
 					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
@@ -197,8 +216,8 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 				defaultAccount=new ConfigAutoLogin().readName();
 //System.out.println("defaultAccount=   "+defaultAccount);
 				if(defaultAccount==null)
-					setDefaultLoginAccount=new SetDefaultLoginAccount(readAccount.accountArrary, new ConfigAutoLogin());
-				params=readAccount.hashMap.get(defaultAccount);
+					setDefaultLoginAccount=new SetDefaultLoginAccount(Account.accountArrary, new ConfigAutoLogin());
+				params=Account.hashMap.get(defaultAccount);
 				try {
 					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
@@ -211,6 +230,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		
 	}
 
+	//实现comboBox的触发器
 	public void itemStateChanged(ItemEvent e) {
 		
 		//自动登录的功能记录

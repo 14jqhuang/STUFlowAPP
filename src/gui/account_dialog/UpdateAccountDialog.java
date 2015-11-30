@@ -23,7 +23,7 @@ public class UpdateAccountDialog extends JDialog implements ActionListener{
 	public UpdateAccountDialog(JFrame jframe)   {
 		this.setLayout(new GridLayout(2, 1));
 		this.setTitle("选择账号");	
-		accountSelectCombo=new JComboBox<String>(ButtonAreaPanel.readAccount.accountArrary);
+		accountSelectCombo=new JComboBox<String>(ButtonAreaPanel.Account.accountArrary);
 		this.add(accountSelectCombo);
 		JPanel tempPanel=new JPanel();
 		sureButton=new JButton("确定");
@@ -41,9 +41,9 @@ public class UpdateAccountDialog extends JDialog implements ActionListener{
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
+	
 	//显示修改数据的面板添加新的数据
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource()==sureButton)
 		{	new UpdateAccount2Dialog(accountSelectCombo.getSelectedIndex());
 			this.dispose();
