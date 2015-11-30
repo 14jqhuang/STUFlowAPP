@@ -18,8 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import function.music_play.GetMusicFile;
 import lin.component.ButtonAreaPanel;
+import other.bean.Musics;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
@@ -30,15 +30,15 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 	public JButton sureButton;
 	private JButton cancelButton;
 	private SpinnerNumberModel model;
-//	private MusicChooser musicChooser;
 	private int maxFlow=800;//记录最大的流量,默认800M
 	public File musicFile;
-	private GetMusicFile musicList;
+	private Musics musicList;
 	private PlayMusic music;
+	
 	public static String musicPath;
 	public static int alarmAmount;
+	
 	public AlarmSettingDialog(String maxFlow) throws UnsupportedEncodingException {
-		// TODO Auto-generated constructor stub
 		//界面设计
 		this.setTitle("设置提醒");
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
@@ -58,7 +58,7 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 		
 		this.add(new JLabel("提醒铃声:"));
 		JPanel panel=new JPanel();
-		musicList=new GetMusicFile(ResourcePath.JARPATH);
+		musicList=new Musics(ResourcePath.JARPATH);
 		if(musicList.strMusicList.length==0)
 		{	JOptionPane.showMessageDialog(this, "当前文件夹没有(.wav)音乐文件");
 			this.dispose();
@@ -69,9 +69,7 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 			tryLisButton=new JButton("试听");
 			panel.add(tryLisButton);
 			tryLisButton.addActionListener(this);
-//		alarmSpin.setMaximumSize(new Dimension(280, 50));
-//		alarmSpin.setPreferredSize(new Dimension(50, 28));
-		alarmCombo.setPreferredSize(new Dimension(120, 28));
+			alarmCombo.setPreferredSize(new Dimension(120, 28));
 			this.add(panel);
 			JPanel panel1=new JPanel();
 			sureButton=new JButton("确定");

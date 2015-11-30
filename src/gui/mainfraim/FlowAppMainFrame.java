@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
+
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -18,7 +19,6 @@ import javax.swing.JSplitPane;
 
 import function.config_auto_file.ConfigAutoLogin;
 import function.config_auto_file.ConfigAutoSelect;
-import function.read_data_from_website.ReadStatus;
 import gui.account_dialog.DropAccountDialog;
 import gui.account_dialog.SetDefaultLoginAccount;
 import gui.account_dialog.UpdateAccountDialog;
@@ -26,10 +26,12 @@ import gui.simplify_dialog.SimplifyDialog;
 import gui.verysimplfy_dialog.VerySimpleDialog;
 import lin.component.ButtonAreaPanel;
 import lin.component.FlowDisplayPanel;
-import other.tool.TimerController;
+import other.bean.TimerController;
+import other.bean.WebStatus;
 
 @SuppressWarnings("serial")
 public class FlowAppMainFrame extends JFrame implements ActionListener, ItemListener, WindowListener{
+	
 	private ButtonAreaPanel buttonPanel;
 	private FlowDisplayPanel displayPanel;
 	private VerySimpleDialog verySimpleDialog;
@@ -38,23 +40,43 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	private JMenuBar menubar;
 	private JMenu menu[];
 	private JMenuItem menuItem[];
-	public boolean infront=true;
+	public static SimplifyDialog simplifyDialog;
+	
+	public static TimerController controller=new TimerController();
+	public static WebStatus webStatus=new WebStatus();
 	
 	public String[] strMenu= {"账号管理","功能"};
 	public String[] strMenuItem={"修改","删除","设置自登账号","清空"};
 	public String[] strCheckboxItem={"保持最前","精简面板","超极面板"};
-	public static TimerController controller;
+	public static JCheckBoxMenuItem chekboxItem[];
+	
 	public static final int LOGNO=2;//设置了自动登录但是没有设置账号
 	public static final int SET=1;//已经设置了自登账号
 	public static final int LAST=-1;//有上次自动记录的能登录的账号
 	public static final int INIT=0;//文件里面什么都没有	
-	public static JCheckBoxMenuItem chekboxItem[];
-	public static SimplifyDialog simplifyDialog;
+	
 	public static int  autologin;
 	public static boolean autoSelect;
 	public static boolean inside=false;//内部的组件
+	public boolean infront=true;
+	
+	
 	public FlowAppMainFrame() {
-		controller=new TimerController();
+		
+		drawGui();
+
+		//把读取网络连接的时间器交给时间器管理
+		controller.setWebConnectionTimer(webStatus.startConnection());
+		
+		//设置2个状态
+		this.setAutoLogin();
+		this.setAutoSelect();
+		this.setVisible(true);
+	}
+	
+	
+	private void drawGui()
+	{
 		//GUI界面
 		this.setTitle("流量");
 		this.setBounds(400, 200, 230, 330);
@@ -93,54 +115,28 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		//下面的按钮区域
 		buttonPanel=new ButtonAreaPanel();
 		split.add(buttonPanel);	
-		this.add(split);
-		
-
-		//设置2个状态
-		this.getAutoLogin();
-		this.getAutoSelect();
+		this.add(split);		
 		
 		this.setAlwaysOnTop(true);
 		this.addWindowListener(this);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
-//System.out.println("Class= "+this.getClass().getResource("").getPath());
-//System.out.println("ClassLoad="+this.getClass().getClassLoader().getResource("").getPath());
-//System.out.println("SystemLoad="+ClassLoader.getSystemResource("").getPath());
-/*
- * 导出的jar包输出结果
- * Class= lin/gui/
-	ClassLoad=
-	SystemLoad=/C:/Users/think/Desktop/
- */
+				
 	}
-	
+
 	public static void main(String[] args) {
 		new FlowAppMainFrame();
 	}
 
-//	public void windowGainedFocus(WindowEvent e) {
-//	}
-//
-//	public void windowLostFocus(WindowEvent e) {
-////JOptionPane.showMessageDialog(null, "lostFoucs");
-//		if(inside)
-//		{	this.setAlwaysOnTop(false);
-////JOptionPane.showMessageDialog(this, "inside check!");
-//		}
-//		else this.setAlwaysOnTop(true);
-//		this.setVisible(true);
-//		inside=false;
-//	}
+
 	
 	//获取自动登录的状态
-	public  void getAutoLogin()
+	public  void setAutoLogin()
 	{
 		int temp = 0;
 		try {
 			temp=new ConfigAutoLogin().readModel();
 		} catch (IOException ex) {
-			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
 		autologin=temp;
@@ -148,11 +144,10 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		{	buttonPanel.autoLoginChBox.setSelected(true);
 			ButtonAreaPanel.autoLogin=true;
 		}	
-//System.out.println("AUTOlOGIN="+autologin);
 	}
 
 	//获取自动切换状态
-	public void getAutoSelect()
+	public void setAutoSelect()
 	{
 		autoSelect=new ConfigAutoSelect().readModel();
 		if(autoSelect)
@@ -266,12 +261,11 @@ System.out.println(infront);
 	}
 
 	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		//没有设置自动登录的时候自动记录当前的账号作为
 		//没有设置默认账号的时候登录的账号
 		try {
 			if(autologin<=0)
-			{	new ConfigAutoLogin().write_1Name(ReadStatus.userName);}
+			{	new ConfigAutoLogin().write_1Name(webStatus.userName);}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
-import function.read_data_from_website.ReadStatus;
 import gui.mainfraim.FlowAppMainFrame;
 
 @SuppressWarnings("serial")
@@ -27,6 +27,12 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 	private GridBagConstraints constraints;
 	private JPanel jPanel;
 	public SimplifyDialog(boolean asComponent,Timer timer) {
+		
+			drawGui(asComponent);
+	}
+	
+	private void drawGui(boolean asComponent)
+	{
 		jPanel=new JPanel();
     	jPanel.setBorder(new TitledBorder("Á÷Á¿"));
     	gridbag=new GridBagLayout();
@@ -64,14 +70,14 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
     	statusLabel.setForeground(Color.red);
     	jPanel.add(statusLabel, constraints);
     	
-    	if(ReadStatus.loginStatus==1)
-    		this.setTitle(ReadStatus.userName);
+    	if(FlowAppMainFrame.webStatus.loginStatus==1)
+    		this.setTitle(FlowAppMainFrame.webStatus.userName);
     	this.setSize(120, 120);
     	Dimension d=getToolkit().getScreenSize();
     	this.setLocation(d.width-150,0);
     	this.add(jPanel);
     	
-    	this.setLoginStatus(ReadStatus.loginStatus, ReadStatus.useOut);
+    	this.setLoginStatus(FlowAppMainFrame.webStatus.loginStatus, FlowAppMainFrame.webStatus.useOut);
     	
     	if(asComponent)
     		this.addWindowListener(this);
@@ -80,9 +86,9 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
     	this.setVisible(true);
 	}
 	
-	public void setLoginStatus(int loginstatus,boolean useOut)
+	private void setLoginStatus(int loginstatus,boolean useOut)
     {
-			if(!ReadStatus.WebLost)
+			if(!FlowAppMainFrame.webStatus.WebLost)
 	    	{	if(loginstatus==1)
 	    		{	statusLabel.setForeground(Color.green);
 	    		statusLabel.setText("ÒÑµÇÂ¼");
@@ -107,22 +113,21 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
     }
 
 	public void setTexts(String name,String used,String remain,int status)
-    {	if(!ReadStatus.WebLost)
+    {	if(!FlowAppMainFrame.webStatus.WebLost)
     	{	this.setTitle(name);
-	    	this.usedText.setText(ReadStatus.subNum(used));
-	    	this.remainText.setText(ReadStatus.subNum(remain));
-	    	this.setLoginStatus(status,ReadStatus.useOut);
+	    	this.usedText.setText(FlowAppMainFrame.webStatus.subNum(used));
+	    	this.remainText.setText(FlowAppMainFrame.webStatus.subNum(remain));
+	    	this.setLoginStatus(status,FlowAppMainFrame.webStatus.useOut);
     	}else
     	{
     		this.setTitle("");
 	    	this.usedText.setText("");
 	    	this.remainText.setText("");
-	    	this.setLoginStatus(status,ReadStatus.useOut);
+	    	this.setLoginStatus(status,FlowAppMainFrame.webStatus.useOut);
     	}
     }
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new SimplifyDialog(false,null);
 	}
 
@@ -131,6 +136,7 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 		this.setAlwaysOnTop(infront);
 		this.setVisible(true);
 	}
+	
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		

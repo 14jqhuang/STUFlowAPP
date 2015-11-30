@@ -24,16 +24,17 @@ public class PlayMusic implements ActionListener, WindowListener {
 	public InputStream in;
 	private JDialog controlPanel;
 	private boolean asCompenont;
+	
 	public PlayMusic(File f,boolean asCompenont) throws IOException {
-		// TODO Auto-generated constructor stub
 		this.asCompenont=asCompenont;
 		in=new FileInputStream(f);
 		as=new AudioStream(in);
 	}
+	
 	public PlayMusic(InputStream musicStream) throws IOException {
-		// TODO Auto-generated constructor stub
 		as=new AudioStream(musicStream);
 	}
+	
 	public PlayMusic(String musicPath,boolean asCompenont)
 	{
 		this.asCompenont=asCompenont;
@@ -41,19 +42,21 @@ public class PlayMusic implements ActionListener, WindowListener {
 			InputStream in=this.getClass().getClassLoader().getResourceAsStream(musicPath);
 			as=new AudioStream(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	public void play()
 	{
 		AudioPlayer.player.start(as);
 	}
+	
 	public void close() throws IOException
 	{
 		AudioPlayer.player.stop(as);
 		as.close();
 	}
+	
 	public void showControlPanel(JDialog dialog,String message)
 	{
 		controlPanel=new JDialog();
@@ -74,7 +77,6 @@ public class PlayMusic implements ActionListener, WindowListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getActionCommand().equals("ֹͣ"))
 		{	try {				
 				if(asCompenont)
@@ -82,7 +84,6 @@ public class PlayMusic implements ActionListener, WindowListener {
 				this.close();
 				controlPanel.dispose();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -102,7 +103,6 @@ public class PlayMusic implements ActionListener, WindowListener {
 				ButtonAreaPanel.alarmhasSet=false;
 			this.close();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

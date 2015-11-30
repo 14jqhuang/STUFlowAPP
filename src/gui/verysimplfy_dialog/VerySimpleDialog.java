@@ -9,12 +9,12 @@ import java.awt.event.WindowListener;
 import javax.swing.JDialog;
 import javax.swing.Timer;
 
-import function.read_data_from_website.ReadStatus;
 import gui.mainfraim.FlowAppMainFrame;
 
 @SuppressWarnings("serial")
 public class VerySimpleDialog extends JDialog implements ActionListener, WindowListener {
 	private Timer timer;
+	
 	public VerySimpleDialog(Timer timer) {
 		this.timer=timer;
 		this.timer.addActionListener(this);
@@ -26,11 +26,11 @@ public class VerySimpleDialog extends JDialog implements ActionListener, WindowL
     	this.setVisible(true);
 	}
 	
-	public String getRateData(boolean weblost,String used,String total,boolean useOut)
+	private String getRateData(boolean weblost,String used,String total,boolean useOut)
 	{
 		if (!weblost) {
-			double total_int = Integer.parseInt(ReadStatus.subNum(total));
-			double used_int = Integer.parseInt(ReadStatus.subNum(used));
+			double total_int = Integer.parseInt(FlowAppMainFrame.webStatus.subNum(total));
+			double used_int = Integer.parseInt(FlowAppMainFrame.webStatus.subNum(used));
 			if (!useOut)
 				return "рясц:" + (int) (used_int / total_int * 100) + "%";
 			//			return ""+used_int/total_int;
@@ -50,9 +50,8 @@ public class VerySimpleDialog extends JDialog implements ActionListener, WindowL
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		this.setTitle(getRateData(ReadStatus.WebLost,ReadStatus.usedAmount, 
-				ReadStatus.totalAmount, ReadStatus.useOut));
+		this.setTitle(getRateData(FlowAppMainFrame.webStatus.WebLost,FlowAppMainFrame.webStatus.usedAmount, 
+				FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.useOut));
 	}
 
 	@Override
