@@ -88,35 +88,36 @@ public class SimplifyDialog extends JDialog implements WindowListener,ActionList
 	
 	private void setLoginStatus(int loginstatus,boolean useOut)
     {
-			if(!FlowAppMainFrame.webStatus.WebLost)
-	    	{	if(loginstatus==1)
-	    		{	statusLabel.setForeground(Color.green);
-	    		statusLabel.setText("已登录");
-	    		}
-	    		else if(loginstatus==0)
-	    		{
-	    			statusLabel.setForeground(Color.red);
-	    			statusLabel.setText("未登录");
-	    		}else {
-	    			statusLabel.setForeground(Color.blue);
-	    		statusLabel.setText("用户名或密码错误");
-	    	}
-	    	if(useOut)
-	    	{
-	    		statusLabel.setForeground(Color.blue);
-	    		statusLabel.setText("流量已用完");
-	    	}}
-			else {
-				statusLabel.setForeground(Color.blue);
-				statusLabel.setText("已断网");
-			}
+		if(!FlowAppMainFrame.webStatus.WebLost)
+    	{	if(loginstatus==1)
+    		{	statusLabel.setForeground(Color.green);
+    		statusLabel.setText("已登录");
+    		}
+    		else if(loginstatus==0)
+    		{
+    			statusLabel.setForeground(Color.red);
+    			statusLabel.setText("未登录");
+    		}else {
+    			statusLabel.setForeground(Color.blue);
+    		statusLabel.setText("用户名或密码错误");
+    	}
+    	if(useOut)
+    	{
+    		statusLabel.setForeground(Color.blue);
+    		statusLabel.setText("流量已用完");
+    	}}
+		else {
+			statusLabel.setForeground(Color.blue);
+			statusLabel.setText("已断网");
+		}	
     }
 
 	public void setTexts(String name,String used,String remain,int status)
-    {	if(!FlowAppMainFrame.webStatus.WebLost)
+    {	
+		if(!FlowAppMainFrame.webStatus.WebLost)
     	{	this.setTitle(name);
-	    	this.usedText.setText(FlowAppMainFrame.webStatus.subNum(used));
-	    	this.remainText.setText(FlowAppMainFrame.webStatus.subNum(remain));
+	    	this.usedText.setText(used);
+	    	this.remainText.setText(remain);
 	    	this.setLoginStatus(status,FlowAppMainFrame.webStatus.useOut);
     	}else
     	{

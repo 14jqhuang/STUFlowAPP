@@ -95,7 +95,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	private void startTimer()
 	{
 		
-		timer=new Timer(1000, this);
+		timer=new Timer(FlowAppMainFrame.controller.interval, this);
 		FlowAppMainFrame.controller.setButtonPanelTimer(timer);
 		if(!FlowAppMainFrame.webStatus.WebLost)
 			timer.start();
@@ -134,7 +134,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		
 		//流量提醒的检查
 		if(!FlowAppMainFrame.webStatus.WebLost&&(alarmhasSet)&&
-				(	Integer.parseInt(FlowAppMainFrame.webStatus.subNum(FlowAppMainFrame.webStatus.usedAmount))
+				(	FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)/1000000
 				>=AlarmSettingDialog.alarmAmount))
 		{
 			music=new PlayMusic(AlarmSettingDialog.musicPath,true);
@@ -147,9 +147,9 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		if(action.equals("设置提醒"))//这里如果用getAccom..会报错 为毛啊?因为时间器执行的时候没有激发事件
 		{	FlowAppMainFrame.inside=true;
 			try {
-				new AlarmSettingDialog(FlowAppMainFrame.webStatus.subNum(FlowAppMainFrame.webStatus.totalAmount));
+				new AlarmSettingDialog(
+						""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.totalAmount));
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}			
 		}
@@ -169,7 +169,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			try {
 				new AddAccountDialog();
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			if(accountSelectCombo!=null)
@@ -182,6 +181,12 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		//登录功能
 		if(!FlowAppMainFrame.webStatus.WebLost&&e.getSource()==loginButton)
 		{	
+//			try {
+//				FlowAppMainFrame.controller.setDelay(10*1000);
+//				FlowAppMainFrame.controller.restartAll();
+//			} catch (NullPointerException e2) {
+//			}
+			
 			String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
 			if(temp!=null&&FlowAppMainFrame.webStatus.loginStatus==FlowAppMainFrame.webStatus.OUT)
 			{	
@@ -189,7 +194,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 				try {
 					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
-					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "发送登录信息失败");
 				}
 			}
@@ -200,11 +204,9 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		if(!FlowAppMainFrame.webStatus.WebLost)
 		{	if(FlowAppMainFrame.webStatus.loginStatus==1)
 			{	loginButton.setEnabled(false);
-	//			accountSelectCombo.setEditable(false);
 			}
 			else {
 				loginButton.setEnabled(true);
-	//			accountSelectCombo.setEditable(true);
 			}
 		}
 		
@@ -214,17 +216,14 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			String defaultAccount = null;
 			try {
 				defaultAccount=new ConfigAutoLogin().readName();
-//System.out.println("defaultAccount=   "+defaultAccount);
 				if(defaultAccount==null)
 					setDefaultLoginAccount=new SetDefaultLoginAccount(Account.accountArrary, new ConfigAutoLogin());
 				params=Account.hashMap.get(defaultAccount);
 				try {
 					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
-						// TODO Auto-generated catch block
 						JOptionPane.showMessageDialog(null, "发送登录信息失败");	}
 				} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();}
 		}
 		
@@ -243,7 +242,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 						FlowAppMainFrame.autologin=2;
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			
@@ -257,10 +255,8 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 					try {
 						new ConfigAutoSelect().writeY();
 					} catch (UnsupportedEncodingException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-//System.out.println("select");
 				}
 				i++;
 
@@ -272,7 +268,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 					try {
 						new ConfigAutoSelect().writeN();
 					} catch (UnsupportedEncodingException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					FlowAppMainFrame.autoSelect = false;

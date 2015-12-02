@@ -1,5 +1,7 @@
 package gui.mainfraim;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -16,6 +18,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
+
 
 import function.config_auto_file.ConfigAutoLogin;
 import function.config_auto_file.ConfigAutoSelect;
@@ -74,13 +77,13 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		this.setVisible(true);
 	}
 	
-	
 	private void drawGui()
 	{
 		//GUI界面
 		this.setTitle("流量");
-		this.setBounds(400, 200, 230, 330);
-		this.setResizable(false);
+		Dimension dim=Toolkit.getDefaultToolkit().getScreenSize();
+		this.setBounds(dim.width*2/5, dim.height/4,dim.width/6, dim.height*9/20);
+		this.setResizable(true);
 		
 		menubar=new JMenuBar();
 		this.setJMenuBar(menubar);

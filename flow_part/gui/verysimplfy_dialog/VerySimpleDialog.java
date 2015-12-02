@@ -29,11 +29,10 @@ public class VerySimpleDialog extends JDialog implements ActionListener, WindowL
 	private String getRateData(boolean weblost,String used,String total,boolean useOut)
 	{
 		if (!weblost) {
-			double total_int = Integer.parseInt(FlowAppMainFrame.webStatus.subNum(total));
-			double used_int = Integer.parseInt(FlowAppMainFrame.webStatus.subNum(used));
 			if (!useOut)
-				return "已用:" + (int) (used_int / total_int * 100) + "%";
-			//			return ""+used_int/total_int;
+				return "已用:" +
+					(int) (FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)*100.0/ 
+							FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.totalAmount) ) + "%";
 			else
 				return "已爆:" + "100%";
 		}else

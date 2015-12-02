@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,6 +40,7 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 	public static int alarmAmount;
 	
 	public AlarmSettingDialog(String maxFlow) throws UnsupportedEncodingException {
+		
 		//界面设计
 		this.setTitle("设置提醒");
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
@@ -58,7 +60,7 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 		
 		this.add(new JLabel("提醒铃声:"));
 		JPanel panel=new JPanel();
-		musicList=new Musics(ResourcePath.JARPATH);
+		musicList=new Musics(URLDecoder.decode(ResourcePath.JARPATH, "utf-8"));
 		if(musicList.strMusicList.length==0)
 		{	JOptionPane.showMessageDialog(this, "当前文件夹没有(.wav)音乐文件");
 			this.dispose();
@@ -92,7 +94,6 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getActionCommand().equals("取消"))
 			this.dispose();
 		if(e.getActionCommand().equals("试听"))
@@ -102,7 +103,6 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 			{	try {
 				music=new PlayMusic(musicList.hashMap.get(name),true);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 				music.play();
@@ -112,7 +112,6 @@ public class AlarmSettingDialog extends JDialog implements ActionListener {
 		if(e.getActionCommand().equals("确定"))
 		{
 			musicPath=(String) alarmCombo.getSelectedItem();
-//System.out.println(musicIndex);
 			try{	alarmAmount=(Integer) alarmSpin.getValue();}
 			catch(NumberFormatException ex) { JOptionPane.showMessageDialog(this, "输入错误");		};
 			this.dispose();

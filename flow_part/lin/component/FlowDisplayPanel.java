@@ -44,7 +44,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     
     public void startTimer()
     {
-    	timer= new Timer(1000, this);
+    	timer= new Timer(FlowAppMainFrame.controller.interval, this);
     	FlowAppMainFrame.controller.setFlowPanelTimer(timer);
     	timer.start();
     }
@@ -58,7 +58,13 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     		this.totalText.setText(total);
     		this.remainText.setText(remain);
     		this.setLoginStatus(status,FlowAppMainFrame.webStatus.useOut);
-    	}else {
+//    		
+//			try {
+//				FlowAppMainFrame.controller.setDelay(10*1000);//设置为10s截取一次
+//				FlowAppMainFrame.controller.restartAll();
+//			} catch (NullPointerException e) {}
+    	}
+    	else {//断网
     		this.nameText.setText("");
     		this.usedText.setText("");
     		this.totalText.setText("");
@@ -67,7 +73,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	}
     }
     
-    //设置状态标签显示的内容 包括已登录,未登录,用户名或密码错误,流量已用完,已断网
+    //设置状态标签显示的内容 包括已登录,未登录,用户名或密码错误,流量已用完,已断网,还有时间器的delay设置
     private void setLoginStatus(int loginstatus,boolean useOut)
     {
     	if(!FlowAppMainFrame.webStatus.WebLost)	
@@ -75,12 +81,22 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			{	statusLabel.setForeground(Color.green);
 				statusLabel.setText("已登录");
 				logoutButton.setEnabled(true);
+//				try {
+//					FlowAppMainFrame.controller.setDelay(10*1000);//设置为10s截取一次
+//					FlowAppMainFrame.controller.restartAll();
+//				} catch (NullPointerException e) {
+//				}
 			}
 			else if(loginstatus==0)
 			{
 				statusLabel.setForeground(Color.red);
 				statusLabel.setText("未登录");
 				logoutButton.setEnabled(false);
+//				try {
+//					FlowAppMainFrame.controller.setDelay(1);//设置为1毫秒的极速反应
+//					FlowAppMainFrame.controller.restartAll();
+//				} catch (NullPointerException e) {
+//				}
 			}else {
 				statusLabel.setForeground(Color.blue);
 				statusLabel.setText("用户名或密码错误");
@@ -132,7 +148,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	this.add(usedText, constraints);    	
     	constraints=new GridBagConstraints(2, 2, 1, 1, 1, 1,GridBagConstraints.CENTER
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 5, 5);
-    	this.add(new JLabel("Byte"),constraints);
+    	this.add(new JLabel("M"),constraints);
     	
     	constraints=new GridBagConstraints(0, 1, 1, 1, 1, 1,GridBagConstraints.CENTER
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 5, 5);
@@ -145,7 +161,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	this.add(totalText, constraints);    	
     	constraints=new GridBagConstraints(2, 1, 1, 1, 1, 1,GridBagConstraints.CENTER
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 5, 5);
-    	this.add(new JLabel("Byte"),constraints);
+    	this.add(new JLabel("M"),constraints);
     	
     	constraints=new GridBagConstraints(0, 3, 1, 1, 1, 1,GridBagConstraints.CENTER
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
@@ -160,7 +176,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	
     	constraints=new GridBagConstraints(2, 3, 1, 1, 1, 1,GridBagConstraints.CENTER
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-    	this.add(new JLabel("Byte"),constraints);
+    	this.add(new JLabel("M"),constraints);
     	
     	constraints=new GridBagConstraints(0, 4, 3, 1, GridBagConstraints.REMAINDER
     			, 1,GridBagConstraints.CENTER
@@ -191,7 +207,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				try {
 					SendLogRequest.logout(ResourcePath.SERVERPATH);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			//用别的账号登录
@@ -203,7 +218,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 						SendLogRequest.login(ResourcePath.SERVERPATH, 
 								ButtonAreaPanel.Account.hashMap.get(key));
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					
@@ -224,16 +238,40 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				}			
 		}
 		
-		//更新精简面板的数据
-		if(FlowAppMainFrame.simplifyDialog!=null)
-			FlowAppMainFrame.simplifyDialog.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
-					FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
-		this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
-				FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
+		try {
+			//更新精简面板的数据
+			if(FlowAppMainFrame.simplifyDialog!=null)
+				FlowAppMainFrame.simplifyDialog.setTexts(
+						FlowAppMainFrame.webStatus.userName,
+						""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)/1000000, 
+						""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.remainAmount)/1000000,
+									FlowAppMainFrame.webStatus.loginStatus);
+			
+			//更新自己面板的数据
+			this.setTexts(FlowAppMainFrame.webStatus.userName,
+					""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)/1000000, 
+					""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.totalAmount)/1000000, 
+					""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.remainAmount)/1000000,
+								FlowAppMainFrame.webStatus.loginStatus);
+		} catch (NullPointerException e2) {
+			//还没有数据的时候就会激发这个错误
+		}catch (NumberFormatException e2) {
+			
+			if(FlowAppMainFrame.simplifyDialog!=null)
+				FlowAppMainFrame.simplifyDialog.setTexts( "", "" ,"" , FlowAppMainFrame.webStatus.loginStatus);
+			
+			this.setTexts( "" , "" , "" , "" , FlowAppMainFrame.webStatus.loginStatus);
+		}
 		
 		//退出登录的处理动作
 		if(e.getSource()==logoutButton)
 			try {
+				
+				try {
+					FlowAppMainFrame.controller.setDelay(1);//设置为1毫秒的极速反应
+				} catch (NullPointerException e1) {
+				}
+				
 				if(FlowAppMainFrame.autologin!=1&&FlowAppMainFrame.autologin!=2)
 				{	new ConfigAutoLogin().write_1Name(FlowAppMainFrame.webStatus.userName);
 					FlowAppMainFrame.autologin=-1;

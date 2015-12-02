@@ -4,10 +4,12 @@ import javax.swing.Timer;
 
 public class TimerController {
 	
+	public  int interval=1*1500;//快速反应
+	
 	private Timer buttonPanelTimer,
 					 	 flowPanelTimer,
 						 webConnectionTimer;
-
+	
 	public Timer getButtonPanelTimer() {
 		return buttonPanelTimer;
 	}
@@ -32,5 +34,17 @@ public class TimerController {
 		this.webConnectionTimer = webConnectionTimer;
 	}
 	
+	public void setDelay(int delay)
+	{
+		buttonPanelTimer.setDelay(delay);
+		flowPanelTimer.setDelay(delay);
+		webConnectionTimer.setDelay(delay);
+	}
 	
+	public void restartAll()
+	{
+		buttonPanelTimer.restart();
+		flowPanelTimer.restart();
+		webConnectionTimer.restart();
+	}
 }
