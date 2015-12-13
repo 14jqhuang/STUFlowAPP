@@ -19,7 +19,7 @@ import javax.swing.border.TitledBorder;
 
 import function.config_auto_file.ConfigAutoLogin;
 import gui.mainfraim.FlowAppMainFrame;
-import other.tool.SendLogRequest;
+import other.tool.FlowLogRequest;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
@@ -205,7 +205,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			//如果是登录着,发送退出的信息
 			if(FlowAppMainFrame.webStatus.loginStatus==1)
 				try {
-					SendLogRequest.logout(ResourcePath.SERVERPATH);
+					FlowLogRequest.logout(ResourcePath.SERVERPATH);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -215,7 +215,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				{
 					String key=ButtonAreaPanel.Account.accountList.get(time);
 					try {
-						SendLogRequest.login(ResourcePath.SERVERPATH, 
+						FlowLogRequest.login(ResourcePath.SERVERPATH, 
 								ButtonAreaPanel.Account.hashMap.get(key));
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -276,7 +276,7 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				{	new ConfigAutoLogin().write_1Name(FlowAppMainFrame.webStatus.userName);
 					FlowAppMainFrame.autologin=-1;
 				}
-				SendLogRequest.logout(ResourcePath.SERVERPATH);		
+				FlowLogRequest.logout(ResourcePath.SERVERPATH);		
 				//更新显示的数据
 				this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
 						FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);

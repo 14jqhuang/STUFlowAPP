@@ -24,7 +24,7 @@ import gui.alarm_dialog.AlarmSettingDialog;
 import gui.alarm_dialog.PlayMusic;
 import gui.mainfraim.FlowAppMainFrame;
 import other.bean.Account;
-import other.tool.SendLogRequest;
+import other.tool.FlowLogRequest;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
@@ -192,7 +192,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			{	
 				params=Account.hashMap.get(temp);
 				try {
-					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
+					FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
 					JOptionPane.showMessageDialog(null, "·¢ËÍµÇÂ¼ÐÅÏ¢Ê§°Ü");
 				}
@@ -220,7 +220,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 					setDefaultLoginAccount=new SetDefaultLoginAccount(Account.accountArrary, new ConfigAutoLogin());
 				params=Account.hashMap.get(defaultAccount);
 				try {
-					SendLogRequest.login(ResourcePath.SERVERPATH	, params);
+					FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
 					}catch (IOException e1) {
 						JOptionPane.showMessageDialog(null, "·¢ËÍµÇÂ¼ÐÅÏ¢Ê§°Ü");	}
 				} catch (IOException e1) {

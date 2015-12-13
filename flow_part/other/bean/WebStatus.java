@@ -62,7 +62,7 @@ public class WebStatus {
 			//处理断网
 			WebLost=true;
 			this.setNull();
-			timer.stop();
+			//timer.stop();
 		}
 		timer.start();
 		return timer;		
@@ -186,27 +186,22 @@ public class WebStatus {
 	}
 
 
-	private  void setUseOut()
+	private  void setUseOut() throws IOException
 	{
-		try {
-			if(!WebLost)
-			{	this.setLoginStatus(this.input);
-				if(loginStatus==IN)
-				{	
-					if(flowStringToNumber(usedAmount)>=flowStringToNumber(totalAmount))
-						useOut=true;			
-					else useOut=false;
-				}
+		if(!WebLost)
+		{	this.setLoginStatus(this.input);
+			if(loginStatus==IN)
+			{	
+				if(flowStringToNumber(usedAmount)>=flowStringToNumber(totalAmount))
+					useOut=true;			
+				else useOut=false;
 			}
-		} catch (Exception e) {
-			//在还没有获得数据的时候就会激发这个错误
-//			e.printStackTrace();
 		}
 	}
 	
 	//这个是用来截取状态的 但是没有办法截取到密码错误的情况
 	//可能还是一个正则表达式的问题 坑的一笔
-	 public  void setLoginStatus(StringBuilder input)
+	 public  void setLoginStatus(StringBuilder input) throws IOException
 	{
 		if(!WebLost)
 		{try {
@@ -231,20 +226,16 @@ public class WebStatus {
 		}
 	}
 
-	public void refreshInput()
+	public void refreshInput() throws IOException
 	{
-		try {
-			input=null;
-			input=getStringBuilder(ResourcePath.DATAPATH);
-			System.gc();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "input刷新失败");
-			timer.stop();
-		}
+		//TODO Auto-generated catch block
+		input=null;
+		input=getStringBuilder(ResourcePath.DATAPATH);
 	}
 	
-	public void setWebStatus()
+	public void setWebStatus() throws IOException
 	{
+		// TODO Auto-generated catch block
 		this.setNull();
 		this.setLoginStatus(input);
 		this.setUseOut();

@@ -11,12 +11,12 @@ import javax.swing.JOptionPane;
 
 import resource.webserver.ResourcePath;
 
-public class SendLogRequest {
+public class FlowLogRequest {
 	private static HttpURLConnection con;
 	private static OutputStreamWriter out;
 	private static URL url;
 	
-	public SendLogRequest() throws Exception {
+	public FlowLogRequest() throws Exception {
 		throw new Exception("不要实例化SendLoginRequest");
 	}
 	
@@ -25,7 +25,6 @@ public class SendLogRequest {
 		try {
 			url=new URL(serverpath);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "服务器哪里捡的山塞货?完全找不到");
 		}
 		try {
@@ -39,7 +38,7 @@ public class SendLogRequest {
 			out.write(params);
 			out.flush();
 			out.close();
-			con.getResponseCode();//这句话是跟服务器说我发给你的内容结束了
+			con.getResponseCode();
 			con.disconnect();
 //System.out.println(con.getResponseCode());//就算是断开连接了也能得到什么,而且两次的结果是一样的
 		} catch (SocketTimeoutException e) {
@@ -76,8 +75,9 @@ public class SendLogRequest {
 			JOptionPane.showMessageDialog(null, "已断网");
 		}
 	}
+	
 	public static void main(String[] args) throws IOException {
-		SendLogRequest.login(ResourcePath.SERVERPATH,"AuthenticateUser=14sxlin&AuthenticatePassword=pw146348");
+		FlowLogRequest.login(ResourcePath.SERVERPATH,"AuthenticateUser=14sxlin&AuthenticatePassword=pw146348");
 //		a.logout(ResourcePath.SERVERPATH);
 		//如果读在写之前可能也会报connection reset的错误
 	}
