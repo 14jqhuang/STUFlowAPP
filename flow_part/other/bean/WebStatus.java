@@ -59,6 +59,7 @@ public class WebStatus {
 			input=this.getStringBuilder(ResourcePath.SERVERPATH);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
 			//处理断网
 			WebLost=true;
 			this.setNull();
@@ -152,7 +153,7 @@ public class WebStatus {
 	}
 	
 	//将截取的数据转换成整型数字
-	public int flowStringToNumber(String str) throws NullPointerException
+	public int flowStringToNumber(String str) throws NullPointerException,NumberFormatException
 	{
 		String temp[];
 		temp=str.split(",");
@@ -162,11 +163,7 @@ public class WebStatus {
 			for(String part : temp)
 				intString+=part;
 		int tempInt = 0;
-		try {
-			tempInt= Integer.parseInt(intString);
-		} catch (NumberFormatException e) {
-			throw new NumberFormatException();
-		}
+		tempInt= Integer.parseInt(intString);
 		return tempInt;
 	}
 
@@ -192,9 +189,15 @@ public class WebStatus {
 		{	this.setLoginStatus(this.input);
 			if(loginStatus==IN)
 			{	
-				if(flowStringToNumber(usedAmount)>=flowStringToNumber(totalAmount))
-					useOut=true;			
-				else useOut=false;
+				try {
+					if(flowStringToNumber(usedAmount)>=flowStringToNumber(totalAmount))
+						useOut=true;			
+					else useOut=false;
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+				}
 			}
 		}
 	}
