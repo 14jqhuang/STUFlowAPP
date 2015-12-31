@@ -32,13 +32,14 @@ public class FlowLogRequest {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			con.setUseCaches(false);
-			con.setConnectTimeout(4000);
+			con.setConnectTimeout(1000);
+			con.setReadTimeout(2000);
 			con.connect();
 			out=new OutputStreamWriter(con.getOutputStream(), "UTF-8");
 			out.write(params);
 			out.flush();
 			out.close();
-			con.getResponseCode();
+//			System.out.println(con.getResponseCode());
 			con.disconnect();
 //System.out.println(con.getResponseCode());//就算是断开连接了也能得到什么,而且两次的结果是一样的
 		} catch (SocketTimeoutException e) {
@@ -69,7 +70,7 @@ public class FlowLogRequest {
 			out.write(params);
 			out.flush();
 			out.close();
-			con.getResponseCode();
+//			System.out.println(con.getResponseCode());
 			con.disconnect();
 		} catch (SocketTimeoutException e) {
 			JOptionPane.showMessageDialog(null, "已断网");

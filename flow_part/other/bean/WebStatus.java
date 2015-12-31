@@ -46,7 +46,10 @@ public class WebStatus {
 					if(loginStatus==IN)
 						setStatus(input);
 				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, "网页打不开啊..隔壁老王\n"+this.getClass().getName());
+					JOptionPane.showMessageDialog(null, "断网！"+this.getClass().getName());
+					timer.stop();//断网
+					loginStatus = OUT;
+					WebLost = true;
 				}
 			}
 		});
@@ -101,7 +104,8 @@ public class WebStatus {
 		BufferedReader br=null;
 		URL url=new URL(pathname);
 		URLConnection con=url.openConnection();
-		InputStream in=con.getInputStream();
+		// TODO Auto-generated catch block
+		InputStream in=con.getInputStream();//java.net.ConnectException: Connection timed out: connect
 		br=new BufferedReader(new InputStreamReader(in));
 		return br;
 		

@@ -187,17 +187,21 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 //			} catch (NullPointerException e2) {
 //			}
 			
-			String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
-			if(temp!=null&&FlowAppMainFrame.webStatus.loginStatus==FlowAppMainFrame.webStatus.OUT)
-			{	
-				params=Account.hashMap.get(temp);
-				try {
-					FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
-					}catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, "发送登录信息失败");
+			try {
+				String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
+				if(temp!=null&&FlowAppMainFrame.webStatus.loginStatus==FlowAppMainFrame.webStatus.OUT)
+				{	
+					params=Account.hashMap.get(temp);
+					try {
+						FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
+						}catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, "发送登录信息失败");
+					}
 				}
+				else JOptionPane.showMessageDialog(null, "请先退出已登录的账号");
+			} catch (NullPointerException e1) {
+				JOptionPane.showMessageDialog(this, "请选择账号");
 			}
-			else JOptionPane.showMessageDialog(null, "请先退出已登录的账号");
 		}
 		
 		//登录按钮的检查
