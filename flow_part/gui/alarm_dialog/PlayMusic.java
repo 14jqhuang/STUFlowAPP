@@ -16,7 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
-import lin.component.ButtonAreaPanel;
+import gui.component.ButtonAreaPanel;
 import sun.audio.*;
 public class PlayMusic implements ActionListener, WindowListener {
 

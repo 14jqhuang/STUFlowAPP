@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 import function.account_operate.AccountOperator;
 import function.account_operate.AddUser;
-import lin.component.ButtonAreaPanel;
+import gui.component.ButtonAreaPanel;
 
 @SuppressWarnings("serial")
 public class AddAccountDialog extends JDialog implements ActionListener {

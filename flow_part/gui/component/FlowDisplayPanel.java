@@ -1,4 +1,4 @@
-package lin.component;
+package gui.component;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -58,11 +57,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     		this.totalText.setText(total);
     		this.remainText.setText(remain);
     		this.setLoginStatus(status,FlowAppMainFrame.webStatus.useOut);
-//    		
-//			try {
-//				FlowAppMainFrame.controller.setDelay(10*1000);//设置为10s截取一次
-//				FlowAppMainFrame.controller.restartAll();
-//			} catch (NullPointerException e) {}
     	}
     	else {//断网
     		this.nameText.setText("");
@@ -81,22 +75,12 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			{	statusLabel.setForeground(Color.green);
 				statusLabel.setText("已登录");
 				logoutButton.setEnabled(true);
-//				try {
-//					FlowAppMainFrame.controller.setDelay(10*1000);//设置为10s截取一次
-//					FlowAppMainFrame.controller.restartAll();
-//				} catch (NullPointerException e) {
-//				}
 			}
 			else if(loginstatus==0)
 			{
 				statusLabel.setForeground(Color.red);
 				statusLabel.setText("未登录");
 				logoutButton.setEnabled(false);
-//				try {
-//					FlowAppMainFrame.controller.setDelay(1);//设置为1毫秒的极速反应
-//					FlowAppMainFrame.controller.restartAll();
-//				} catch (NullPointerException e) {
-//				}
 			}else {
 				statusLabel.setForeground(Color.blue);
 				statusLabel.setText("用户名或密码错误");
@@ -121,6 +105,9 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 		}
     }
    
+    /**
+     * 绘制gui,绑定logoutbutton的处理逻辑
+     */
     private void drawGui()
     {
     	//流量展示区
@@ -189,15 +176,39 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     			, 1,GridBagConstraints.CENTER
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
     	logoutButton=new JButton("退出登录");
-    	logoutButton.addActionListener(this);
-//    	logoutButton.setEnabled(false);
+    	
+    	//退出登录的处理动作
+    	logoutButton.addActionListener(e->{
+    		if(e.getSource()==logoutButton)
+    			try {
+    				
+    				try {
+    					FlowAppMainFrame.controller.setDelay(1);//设置为1毫秒的极速反应
+    				} catch (NullPointerException e1) {
+    				}
+    				
+    				if(FlowAppMainFrame.autologin!=1&&FlowAppMainFrame.autologin!=2)
+    				{	new ConfigAutoLogin().write_1Name(FlowAppMainFrame.webStatus.userName);
+    					FlowAppMainFrame.autologin=-1;
+    				}
+    				FlowLogRequest.logout(ResourcePath.SERVERPATH);		
+    				//更新显示的数据
+    				this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
+    						FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
+    				ButtonAreaPanel.loginButton.setEnabled(true);			
+    			} catch (IOException e1) {
+    				JOptionPane.showMessageDialog(null, "发送退出信息失败");
+    			}
+    	});
     	this.add(logoutButton, constraints);
     }
 
     public void actionPerformed(ActionEvent e) {
 		
-		//设置面板的数据
-		this.setLoginStatus(FlowAppMainFrame.webStatus.loginStatus, FlowAppMainFrame.webStatus.useOut);
+		//更新面板的数据
+		this.setLoginStatus(FlowAppMainFrame.webStatus.loginStatus, 
+				FlowAppMainFrame.webStatus.useOut);
+		
 		//自动切换账号登录
 		if(FlowAppMainFrame.webStatus.useOut&&FlowAppMainFrame.autoSelect)
 		{	
@@ -209,6 +220,15 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			
+			//暂停1秒
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			//用别的账号登录
 			if(FlowAppMainFrame.webStatus.loginStatus==0)
 				while(time<ButtonAreaPanel.Account.accountList.size())		
@@ -218,6 +238,14 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 						FlowLogRequest.login(ResourcePath.SERVERPATH, 
 								ButtonAreaPanel.Account.hashMap.get(key));
 					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+					//暂停1秒
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					
@@ -240,63 +268,38 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 		
 		try {
 			//更新精简面板的数据
+			String username = FlowAppMainFrame.webStatus.userName;
+			
+			String used = ""+ FlowAppMainFrame.webStatus.flowStringToNumber(
+							FlowAppMainFrame.webStatus.usedAmount)/1000000;
+			
+			String total = "" + FlowAppMainFrame.webStatus.flowStringToNumber(
+					FlowAppMainFrame.webStatus.totalAmount)/1000000;
+			
+			String remain = ""+FlowAppMainFrame.webStatus.flowStringToNumber(
+					FlowAppMainFrame.webStatus.remainAmount)/1000000;
+			
+			int status = FlowAppMainFrame.webStatus.loginStatus;
+			
 			if(FlowAppMainFrame.simplifyDialog!=null)
-				FlowAppMainFrame.simplifyDialog.setTexts(
-						FlowAppMainFrame.webStatus.userName,
-						""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)/1000000, 
-						""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.remainAmount)/1000000,
-									FlowAppMainFrame.webStatus.loginStatus);
+				FlowAppMainFrame.simplifyDialog.setTexts(username,used,remain,status);
 			
 			//更新自己面板的数据
-			this.setTexts(FlowAppMainFrame.webStatus.userName,
-					""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)/1000000, 
-					""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.totalAmount)/1000000, 
-					""+FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.remainAmount)/1000000,
-								FlowAppMainFrame.webStatus.loginStatus);
+			this.setTexts(username,used,total,remain,status);
 		} catch (NullPointerException e2) {
 			//还没有数据的时候就会激发这个错误
 		}catch (NumberFormatException e2) {
 			
 			if(FlowAppMainFrame.simplifyDialog!=null)
-				FlowAppMainFrame.simplifyDialog.setTexts( "", "" ,"" , FlowAppMainFrame.webStatus.loginStatus);
+				FlowAppMainFrame.simplifyDialog.setTexts( "", "" ,"" , 
+						FlowAppMainFrame.webStatus.loginStatus);
 			
-			this.setTexts( "" , "" , "" , "" , FlowAppMainFrame.webStatus.loginStatus);
+			this.setTexts( "" , "" , "" , "" , 
+					FlowAppMainFrame.webStatus.loginStatus);
 		}
-		
-		//退出登录的处理动作
-		if(e.getSource()==logoutButton)
-			try {
-				
-				try {
-					FlowAppMainFrame.controller.setDelay(1);//设置为1毫秒的极速反应
-				} catch (NullPointerException e1) {
-				}
-				
-				if(FlowAppMainFrame.autologin!=1&&FlowAppMainFrame.autologin!=2)
-				{	new ConfigAutoLogin().write_1Name(FlowAppMainFrame.webStatus.userName);
-					FlowAppMainFrame.autologin=-1;
-				}
-				FlowLogRequest.logout(ResourcePath.SERVERPATH);		
-				//更新显示的数据
-				this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
-						FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
-				ButtonAreaPanel.loginButton.setEnabled(true);			
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, "发送退出信息失败");
-			}
 		
 		//检查退出登录的按钮
 		if(FlowAppMainFrame.webStatus.loginStatus==0)
 			logoutButton.setEnabled(false);
 	}
-	
-    public static void main(String args[])
-	    {
-	    	JFrame jf=new JFrame();
-	    	jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    	jf.setSize(300, 300);
-	    	jf.add(new FlowDisplayPanel(false));
-	    	jf.setVisible(true);
-	    }
-
 }

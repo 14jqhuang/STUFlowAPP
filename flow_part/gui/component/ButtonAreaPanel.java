@@ -1,4 +1,4 @@
-package lin.component;
+package gui.component;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -109,8 +109,44 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	private void setListener()
 	{
 		alarmButton.addActionListener(this);
-		addUser.addActionListener(this);
-		loginButton.addActionListener(this);
+		
+		//添加账号的功能
+		addUser.addActionListener(e->{
+			if(e.getSource()==addUser)
+			{	FlowAppMainFrame.inside=true;
+				try {
+					new AddAccountDialog();
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+				if(accountSelectCombo!=null)
+					accountSelectCombo.removeAllItems();
+				for(String item:Account.accountArrary)
+					accountSelectCombo.addItem(item);
+			}
+		});
+		
+		//登录按钮的实现
+		loginButton.addActionListener(e -> {
+			if(!FlowAppMainFrame.webStatus.WebLost)
+			{	
+				try {
+					String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
+					if(temp!=null&&FlowAppMainFrame.webStatus.loginStatus==FlowAppMainFrame.webStatus.OUT)
+					{	
+						params=Account.hashMap.get(temp);
+						try {
+							FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
+							}catch (IOException e1) {
+							JOptionPane.showMessageDialog(null, "发送登录信息失败");
+						}
+					}
+					else JOptionPane.showMessageDialog(null, "请先退出已登录的账号");
+				} catch (NullPointerException e1) {
+					JOptionPane.showMessageDialog(this, "请选择账号");
+				}
+			}
+		});
 		accountSelectCombo.addActionListener(this);
 		autoLoginChBox.addItemListener(this);
 		autoSelectChBox.addItemListener(this);
@@ -144,7 +180,8 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		
 		
 		//设置提醒,设置之后会变成取消提醒字样
-		if(action.equals("设置提醒"))//这里如果用getAccom..会报错 为毛啊?因为时间器执行的时候没有激发事件
+		//时间器执行的时候不会激发事件
+		if(action.equals("设置提醒"))
 		{	FlowAppMainFrame.inside=true;
 			try {
 				new AlarmSettingDialog(
@@ -163,46 +200,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			alarmButton.setActionCommand("设置提醒");
 		}
 		
-		//添加账号的功能
-		if(e.getSource()==addUser)
-		{	FlowAppMainFrame.inside=true;
-			try {
-				new AddAccountDialog();
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			}
-			if(accountSelectCombo!=null)
-				accountSelectCombo.removeAllItems();
-			for(String item:Account.accountArrary)
-				accountSelectCombo.addItem(item);
-		}
 		
-		
-		//登录功能
-		if(!FlowAppMainFrame.webStatus.WebLost&&e.getSource()==loginButton)
-		{	
-//			try {
-//				FlowAppMainFrame.controller.setDelay(10*1000);
-//				FlowAppMainFrame.controller.restartAll();
-//			} catch (NullPointerException e2) {
-//			}
-			
-			try {
-				String temp=((String) accountSelectCombo.getSelectedItem()).trim();		
-				if(temp!=null&&FlowAppMainFrame.webStatus.loginStatus==FlowAppMainFrame.webStatus.OUT)
-				{	
-					params=Account.hashMap.get(temp);
-					try {
-						FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
-						}catch (IOException e1) {
-						JOptionPane.showMessageDialog(null, "发送登录信息失败");
-					}
-				}
-				else JOptionPane.showMessageDialog(null, "请先退出已登录的账号");
-			} catch (NullPointerException e1) {
-				JOptionPane.showMessageDialog(this, "请选择账号");
-			}
-		}
 		
 		//登录按钮的检查
 		if(!FlowAppMainFrame.webStatus.WebLost)
@@ -215,7 +213,8 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		}
 		
 		//自动登录的检查,如果登出了,自动发送登录信息
-		if(!FlowAppMainFrame.webStatus.WebLost&&autoLoginChBox.isSelected()&&FlowAppMainFrame.webStatus.loginStatus==0)
+		if(!FlowAppMainFrame.webStatus.WebLost&&autoLoginChBox.isSelected()
+				&&FlowAppMainFrame.webStatus.loginStatus==0)
 		{
 			String defaultAccount = null;
 			try {

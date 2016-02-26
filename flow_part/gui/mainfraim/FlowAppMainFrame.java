@@ -25,10 +25,10 @@ import function.config_auto_file.ConfigAutoSelect;
 import gui.account_dialog.DropAccountDialog;
 import gui.account_dialog.SetDefaultLoginAccount;
 import gui.account_dialog.UpdateAccountDialog;
+import gui.component.ButtonAreaPanel;
+import gui.component.FlowDisplayPanel;
 import gui.simplify_dialog.SimplifyDialog;
 import gui.verysimplfy_dialog.VerySimpleDialog;
-import lin.component.ButtonAreaPanel;
-import lin.component.FlowDisplayPanel;
 import other.bean.TimerController;
 import other.bean.WebStatus;
 

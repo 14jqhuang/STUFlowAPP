@@ -10,7 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import lin.component.ButtonAreaPanel;
+import gui.component.ButtonAreaPanel;
 
 @SuppressWarnings("serial")
 /*

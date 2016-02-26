@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 import function.account_operate.AccountOperator;
 import function.account_operate.UpdateUser;
-import lin.component.ButtonAreaPanel;
+import gui.component.ButtonAreaPanel;
 
 /*
  * 2¼¶Ãæ°å

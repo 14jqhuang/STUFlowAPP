@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import function.account_operate.AccountOperator;
 import function.account_operate.DropUser;
-import lin.component.ButtonAreaPanel;
+import gui.component.ButtonAreaPanel;
 
 @SuppressWarnings("serial")
 public class DropAccountDialog extends UpdateAccountDialog implements ActionListener {

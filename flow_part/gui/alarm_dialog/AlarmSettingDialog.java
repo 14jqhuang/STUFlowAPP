@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import lin.component.ButtonAreaPanel;
+import gui.component.ButtonAreaPanel;
 import other.bean.Musics;
 import resource.webserver.ResourcePath;
 

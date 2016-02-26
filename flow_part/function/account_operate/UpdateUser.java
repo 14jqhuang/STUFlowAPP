@@ -26,14 +26,14 @@ public class UpdateUser implements ResourcePath,AccountOperator{
 		this.account = account;
 	}
 	
-	public boolean deleteFile() throws UnsupportedEncodingException
+	private boolean deleteFile() throws UnsupportedEncodingException
 	{
 		file=new File(decode(ResourcePath.ACCOUNTPATH));
 		if(file.exists())
 			return file.delete();
 		else return true;
 	}
-	public Account update() throws UnsupportedEncodingException
+	private Account update() throws UnsupportedEncodingException
 	{
 		account.Update( index , name , password);
 		if(this.deleteFile())
