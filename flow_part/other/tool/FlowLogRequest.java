@@ -9,8 +9,6 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-import resource.webserver.ResourcePath;
-
 public class FlowLogRequest {
 	private static HttpURLConnection con;
 	private static OutputStreamWriter out;
@@ -63,7 +61,7 @@ public class FlowLogRequest {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			con.setUseCaches(false); 
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//post方式
 			con.setRequestProperty("Content-Length", String.valueOf(params.length()));
 			con.connect();
 			out=new OutputStreamWriter(con.getOutputStream(), "utf-8");
@@ -77,10 +75,8 @@ public class FlowLogRequest {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
-		FlowLogRequest.login(ResourcePath.SERVERPATH,"AuthenticateUser=14sxlin&AuthenticatePassword=pw146348");
-//		a.logout(ResourcePath.SERVERPATH);
-		//如果读在写之前可能也会报connection reset的错误
-	}
+//	public static void main(String[] args) throws IOException {
+//		FlowLogRequest.login(ResourcePath.SERVERPATH,"AuthenticateUser=14sxlin&AuthenticatePassword=pw146348");
+//	}
 
 }

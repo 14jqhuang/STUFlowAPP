@@ -99,6 +99,12 @@ public class WebStatus {
 	
 	//获取网页的流
 	//在与服务器断开连接的时候会出错 断网的时候在调用getStringBuilder中处理了
+	/**
+	 * 读取网页的内容
+	 * @param pathname 网址
+	 * @return BufferReader对象
+	 * @throws IOException
+	 */
 	private BufferedReader openStream(String pathname) throws IOException
 	{
 		BufferedReader br=null;
@@ -128,7 +134,7 @@ public class WebStatus {
 	
 	//用index来首搜索流量数据
 	//label的格式应该是<></>
-	public String cutDataInLabel(String preLabel,String lasLabel)
+	public String cutDataInLabel(StringBuilder input , String preLabel,String lasLabel)
 	{
 		String data = "";
 		int preIndex=-1,lasIndex=-1;
@@ -143,20 +149,26 @@ public class WebStatus {
 	
 	private  String setUserName()
 	{
-		return cutDataInLabel("<td width=\"262\" class=\"text3\">", "</td>");
+		return cutDataInLabel(input,"<td width=\"262\" class=\"text3\">", "</td>");
 	}
 	
 	public  String setTotalAmount()
 	{
-		return cutDataInLabel("<td class=\"text3\" id=\"tb\">", "</td>");
+		return cutDataInLabel(input,"<td class=\"text3\" id=\"tb\">", "</td>");
 	}
 	
 	public  String setUsedAmount()
 	{
-		return cutDataInLabel("<td class=\"text3\" id=\"ub\">", "</td>");
+		return cutDataInLabel(input,"<td class=\"text3\" id=\"ub\">", "</td>");
 	}
 	
-	//将截取的数据转换成整型数字
+	/**
+	 * 将截取的数据转换成整型数字
+	 * @param str
+	 * @return
+	 * @throws NullPointerException
+	 * @throws NumberFormatException
+	 */
 	public int flowStringToNumber(String str) throws NullPointerException,NumberFormatException
 	{
 		String temp[];
@@ -187,6 +199,10 @@ public class WebStatus {
 	}
 
 
+	/**
+	 * 判断是否用完的标识
+	 * @throws IOException
+	 */
 	private  void setUseOut() throws IOException
 	{
 		if(!WebLost)
@@ -235,14 +251,12 @@ public class WebStatus {
 
 	public void refreshInput() throws IOException
 	{
-		//TODO Auto-generated catch block
 		input=null;
 		input=getStringBuilder(ResourcePath.DATAPATH);
 	}
 	
 	public void setWebStatus() throws IOException
 	{
-		// TODO Auto-generated catch block
 		this.setNull();
 		this.setLoginStatus(input);
 		this.setUseOut();
@@ -250,12 +264,12 @@ public class WebStatus {
 
 	
 	public static void main(String[] args) throws IOException {
-		WebStatus re=new WebStatus();		
-		re.startConnection();
-		System.out.println("usname= "+re.cutDataInLabel("<td width=\"262\" class=\"text3\">", "</td>"));
-		System.out.println( "ub= "+re.cutDataInLabel("<td class=\"text3\" id=\"ub\">", "</td>"));
-		System.out.println("tb= "+ re.cutDataInLabel("<td class=\"text3\" id=\"tb\">", "</td>"));
-		System.out.println("remain= "+ re.remainAmount);
+//		WebStatus re=new WebStatus();		
+//		re.startConnection();
+//		System.out.println("usname= "+re.cutDataInLabel("<td width=\"262\" class=\"text3\">", "</td>"));
+//		System.out.println( "ub= "+re.cutDataInLabel("<td class=\"text3\" id=\"ub\">", "</td>"));
+//		System.out.println("tb= "+ re.cutDataInLabel("<td class=\"text3\" id=\"tb\">", "</td>"));
+//		System.out.println("remain= "+ re.remainAmount);
 //		re.setWebStatus();
 //		re.setLoginStatus(re.input);
 //System.out.println("loginStatus="+re.loginStatus);

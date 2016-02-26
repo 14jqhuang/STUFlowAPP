@@ -33,32 +33,35 @@ public class WriteAccount{
 	{
 		PrintWriter out=openStream(ResourcePath.ACCOUNTPATH);
 		String str="";
-		str+="AuthenticateUser="+name+"&"+"AuthenticatePassword="+password+"&shit";
+		setupParam(name, password);
 		out.append(str+"\r\n");
 		out.close();
 	}	
 	
+	public static String setupParam(String name,String password) {
+		return "AuthenticateUser="+name+"&"+"AuthenticatePassword="+password+"&shit";
+	}
+	
+	public static String processParam(String param)
+	{
+		if(param.indexOf("AuthenticateUser=") != -1 )
+		{
+			return param;
+		}else {
+			String name = null,password = null;
+			name=param.substring(param.indexOf("@")+"@".length(), param.indexOf("&"));
+			int i=param.indexOf("&")+1;
+			password= param.substring( i );
+			return setupParam(name, password);
+		}
+	}
 	/**
 	 * –¥»Î
 	 * @param param
 	 */
 	public static void writeAccount(String param)
 	{
-		if(param.indexOf("AuthenticateUser=") != -1 )
-		{
-			PrintWriter out=openStream(ResourcePath.ACCOUNTPATH);
-			out.append(param+"\r\n");
-			out.close();
-		}else {
-			String name = null,password = null;
-			name=param.substring(param.indexOf("@")+"@".length(), param.indexOf("&"));
-			int i=param.indexOf("&")+1;
-			password= param.substring( i );
-			String str="";
-			str+="AuthenticateUser="+name+"&"+"AuthenticatePassword="+password+"&shit";
-			PrintWriter out=openStream(ResourcePath.ACCOUNTPATH);
-			out.append(str+"\r\n");
-			out.close();
-		}
+		PrintWriter out=openStream(ResourcePath.ACCOUNTPATH);
+		out.append(processParam(param)+"\r\n");
 	}
 }

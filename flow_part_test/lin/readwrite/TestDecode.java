@@ -35,7 +35,7 @@ public class TestDecode {
 		new MockResourcePath();
 		System.out.println(url.getPath());
 		assertEquals(path, new MockResourcePath().decode(path));
-		assertNotEquals(url.toString(), new MockResourcePath().decode(path));
+		assertNotSame(url.toString(), new MockResourcePath().decode(path));
 	}
 
 }

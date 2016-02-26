@@ -52,7 +52,11 @@ public class Account implements ResourcePath{
 		br.close();
 	}
 	
-	//设置用户名与密码对应的hash表
+	/**
+	 * 设置用户名与密码对应的hash表
+	 * @param br
+	 * @throws IOException
+	 */
 	private void setHashMap(BufferedReader br) throws IOException
 	{
 		try {
@@ -68,7 +72,12 @@ public class Account implements ResourcePath{
 		
 	}
 	
-	//获取用户名,从流中读取到的字符串获取用户名
+	/**
+	 * 获取用户名,从流中读取到的字符串获取用户名
+	 * username=a&password=b
+	 * @param line
+	 * @return
+	 */
 	private String getAccountName(String line)
 	{
 		String temp[]=line.split("&");
@@ -91,11 +100,11 @@ public class Account implements ResourcePath{
 	}
 	
 	//删除账号
-	public void drop(int removeInt)
+	public void drop(int removeIndex)
 	{
 		if (accountList.size()!=0) {
-			accountList.remove(removeInt);
-			hashMap.remove(removeInt);
+			String key = accountList.remove(removeIndex);
+			hashMap.remove(key);
 			if (accountList == null)
 				accountList.add("请添加账号");
 			else {
