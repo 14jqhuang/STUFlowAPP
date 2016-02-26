@@ -19,9 +19,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 
-
-import function.config_auto_file.ConfigAutoLogin;
-import function.config_auto_file.ConfigAutoSelect;
 import gui.account_dialog.DropAccountDialog;
 import gui.account_dialog.SetDefaultLoginAccount;
 import gui.account_dialog.UpdateAccountDialog;
@@ -31,10 +28,12 @@ import gui.simplify_dialog.SimplifyDialog;
 import gui.verysimplfy_dialog.VerySimpleDialog;
 import other.bean.TimerController;
 import other.bean.WebStatus;
+import resource.loadconfig.LoadConfig;
 
 @SuppressWarnings("serial")
 public class FlowAppMainFrame extends JFrame implements ActionListener, ItemListener, WindowListener{
 	
+	private LoadConfig config;
 	private ButtonAreaPanel buttonPanel;
 	private FlowDisplayPanel displayPanel;
 	private VerySimpleDialog verySimpleDialog;
@@ -53,12 +52,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	public String[] strCheckboxItem={"保持最前","精简面板","超极面板"};
 	public static JCheckBoxMenuItem chekboxItem[];
 	
-	public static final int LOGNO=2;//设置了自动登录但是没有设置账号
-	public static final int SET=1;//已经设置了自登账号
-	public static final int LAST=-1;//有上次自动记录的能登录的账号
-	public static final int INIT=0;//文件里面什么都没有	
-	
-	public static int  autologin;
+	public static boolean  autologin;
 	public static boolean autoSelect;
 	public static boolean inside=false;//内部的组件
 	public boolean infront=true;
@@ -136,28 +130,15 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	//获取自动登录的状态
 	public  void setAutoLogin()
 	{
-		int temp = 0;
-		try {
-			temp=new ConfigAutoLogin().readModel();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		autologin=temp;
-		if(temp==1||temp==2)
-		{	buttonPanel.autoLoginChBox.setSelected(true);
-			ButtonAreaPanel.autoLogin=true;
-		}	
+		autologin=config.isAutoLogin();
+		buttonPanel.autoLoginChBox.setSelected(autologin);
 	}
 
 	//获取自动切换状态
 	public void setAutoSelect()
 	{
-		autoSelect=new ConfigAutoSelect().readModel();
-		if(autoSelect)
-			buttonPanel.autoSelectChBox.setSelected(true);
-		else buttonPanel.autoSelectChBox.setSelected(false);
-
-//System.out.println("autoSelect="+autoSelect);
+		autoSelect=config.isAutoSelect();
+		buttonPanel.autoSelectChBox.setSelected(autoSelect);
 	}
 
 	public void actionPerformed(ActionEvent e) {	
@@ -165,12 +146,7 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		//设置自动登录的账号
 		if(e.getActionCommand().equals("设置自登账号")) {
 			if (ButtonAreaPanel.Account.accountList.size()!=0) {
-				try {
-					new SetDefaultLoginAccount(this,ButtonAreaPanel.Account.accountArrary, new ConfigAutoLogin());
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} 
+				new SetDefaultLoginAccount(this,ButtonAreaPanel.Account.accountArrary,config); 
 			}else JOptionPane.showMessageDialog(this, "请先添加账号");
 		}
 		
@@ -264,15 +240,8 @@ System.out.println(infront);
 	}
 
 	public void windowClosing(WindowEvent arg0) {
-		//没有设置自动登录的时候自动记录当前的账号作为
-		//没有设置默认账号的时候登录的账号
-		try {
-			if(autologin<=0)
-			{	new ConfigAutoLogin().write_1Name(webStatus.userName);}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//加入当前正在使用的账号
+		config.setLoginAccount(FlowAppMainFrame.webStatus.userName);
 	}
 
 	public void windowDeactivated(WindowEvent arg0) {

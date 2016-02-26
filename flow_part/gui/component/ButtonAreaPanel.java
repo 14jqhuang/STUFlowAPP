@@ -16,15 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
-import function.config_auto_file.ConfigAutoLogin;
-import function.config_auto_file.ConfigAutoSelect;
 import gui.account_dialog.AddAccountDialog;
-import gui.account_dialog.SetDefaultLoginAccount;
 import gui.alarm_dialog.AlarmSettingDialog;
 import gui.alarm_dialog.PlayMusic;
 import gui.mainfraim.FlowAppMainFrame;
 import other.bean.Account;
 import other.tool.FlowLogRequest;
+import resource.loadconfig.LoadConfig;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
@@ -44,12 +42,19 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	public String params;
 	public Timer timer;
 	public PlayMusic music;
-	public SetDefaultLoginAccount setDefaultLoginAccount;
+	private LoadConfig config;
 	
 	//记录是不是初始化的时候的激发的自动选择
 	public 	int i=0;
 	
-	public ButtonAreaPanel() {
+	public ButtonAreaPanel(){
+		
+		try {
+			config = new LoadConfig();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		initAccount();
 		
@@ -159,7 +164,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			action="none";
 		
 		//初始化自动登录按钮
-		if(FlowAppMainFrame.autologin>0)
+		if(FlowAppMainFrame.autologin)
 			autoSelectChBox.setEnabled(true);
 		else autoSelectChBox.setEnabled(false);
 		
@@ -216,18 +221,16 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		if(!FlowAppMainFrame.webStatus.WebLost&&autoLoginChBox.isSelected()
 				&&FlowAppMainFrame.webStatus.loginStatus==0)
 		{
-			String defaultAccount = null;
+			String defaultAccount = config.getDefaultLoginAccount();
+			if(defaultAccount==null)
+				config.getLoginAccount();
+			
+			params=Account.hashMap.get(defaultAccount);
 			try {
-				defaultAccount=new ConfigAutoLogin().readName();
-				if(defaultAccount==null)
-					setDefaultLoginAccount=new SetDefaultLoginAccount(Account.accountArrary, new ConfigAutoLogin());
-				params=Account.hashMap.get(defaultAccount);
-				try {
-					FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
-					}catch (IOException e1) {
-						JOptionPane.showMessageDialog(null, "发送登录信息失败");	}
-				} catch (IOException e1) {
-				e1.printStackTrace();}
+				FlowLogRequest.login(ResourcePath.SERVERPATH	, params);
+			}catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "发送登录信息失败");	
+			}
 		}
 		
 	}
@@ -237,53 +240,25 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		
 		//自动登录的功能记录
 		if(autoLoginChBox.isSelected())
-		{	autoLogin=true;//这是为了让flowdisplay的按钮不可用	,传递全局信息		
+		{	autoLogin=true;								//这是为了让flowdisplay的按钮不可用	,传递全局信息		
 			if(FlowAppMainFrame.webStatus.loginStatus==1)
-				try {
-					if(FlowAppMainFrame.autologin<=0)
-					{	new ConfigAutoLogin().write2Name(FlowAppMainFrame.webStatus.userName);
-						FlowAppMainFrame.autologin=2;
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				if(FlowAppMainFrame.autologin)
+				{	
+					config.setLoginAccount(FlowAppMainFrame.webStatus.userName);
 				}
-			
-			//写入是否自动切换的资料 不要在这里记录文件,因为初始化的时候会先有未选中的状态
-//			autoSelectChBox.setSelected(true);
+			//自动切换
 			if(autoSelectChBox.isSelected())
 			{	
-				if (i!=0) {
-					FlowAppMainFrame.autoSelect = true;
-					//新建一个记录的文件
-					try {
-						new ConfigAutoSelect().writeY();
-					} catch (UnsupportedEncodingException e1) {
-						e1.printStackTrace();
-					}
-				}
-				i++;
-
+				config.setProperty("autoselect", "yes");
 			}
 			else {		
-				if (i!=0) {
-					//没有选中自动切换的话就写入 n
-//System.out.println("didn't select");
-					try {
-						new ConfigAutoSelect().writeN();
-					} catch (UnsupportedEncodingException e1) {
-						e1.printStackTrace();
-					}
-					FlowAppMainFrame.autoSelect = false;
-					autoSelectChBox.setSelected(false);
-				}
-				i++;
+				config.setProperty("autoselect", "no");
 			}
-//System.out.println(autoLogin);
 		}
 		else 	
 			{
 				autoLogin=false;	
-				FlowAppMainFrame.autologin=-1;
+				config.setProperty("autologin", "no");
 			}
 	}
 }

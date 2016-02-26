@@ -16,9 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
-import function.config_auto_file.ConfigAutoLogin;
 import gui.mainfraim.FlowAppMainFrame;
 import other.tool.FlowLogRequest;
+import resource.loadconfig.LoadConfig;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
@@ -31,11 +31,18 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 	public JButton logoutButton;
 	private GridBagLayout gridbag;
 	private GridBagConstraints constraints;
+	private LoadConfig config;
 	public  Timer timer;
 	
 	//参数显示要不要精简模式,测试时用false
     public FlowDisplayPanel(boolean simplify) {
     	
+    	try {
+			config = new LoadConfig();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	drawGui();
     	
     	startTimer();
@@ -187,14 +194,17 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     				} catch (NullPointerException e1) {
     				}
     				
-    				if(FlowAppMainFrame.autologin!=1&&FlowAppMainFrame.autologin!=2)
-    				{	new ConfigAutoLogin().write_1Name(FlowAppMainFrame.webStatus.userName);
-    					FlowAppMainFrame.autologin=-1;
+    				if(FlowAppMainFrame.autologin)
+    				{	config.setLoginAccount(FlowAppMainFrame.webStatus.userName);
     				}
+    				
     				FlowLogRequest.logout(ResourcePath.SERVERPATH);		
+    				
     				//更新显示的数据
-    				this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
-    						FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
+//    				this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
+//    						FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
+    				this.setTexts("", "", "", "", FlowAppMainFrame.webStatus.loginStatus);
+    				
     				ButtonAreaPanel.loginButton.setEnabled(true);			
     			} catch (IOException e1) {
     				JOptionPane.showMessageDialog(null, "发送退出信息失败");
