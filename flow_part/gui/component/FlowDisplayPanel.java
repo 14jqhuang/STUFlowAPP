@@ -186,6 +186,7 @@ public class FlowDisplayPanel extends JPanel
 				, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
     	logoutButton=new JButton("退出登录");
     	
+<<<<<<< HEAD:flow_part/gui/component/FlowDisplayPanel.java
     	//退出登录的处理动作
     	logoutButton.addActionListener(e->{
     			try {
@@ -205,6 +206,95 @@ public class FlowDisplayPanel extends JPanel
     			}
     	});
     	this.add(logoutButton, constraints);
+=======
+    	if (!ReadStatus.WebLost) {
+			//获取网页的信息
+			try {
+				readStatus = new ReadStatus();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "初始化readStatus失败");
+				//			if(timer!=null)
+				//				timer.stop();
+			}
+			timer = new Timer(1000, this);
+			FlowAppMainFrame.controller.addTimer(timer);
+			if (ReadStatus.loginStatus == 1)
+				timer.setDelay(readStatus.timer.getDelay());
+			timer.start();
+		}else
+		{
+//System.out.println("weblost");
+			statusLabel.setForeground(Color.blue);
+			statusLabel.setText("已断网");
+//			logoutButton.setEnabled(false);			
+		}
+	}
+    
+    //设置显示的数据
+    public void setTexts(String name,String used,String total,String remain,int status)
+    {	if(!ReadStatus.WebLost)
+    	{
+    		this.nameText.setText(name);
+    		this.usedText.setText(used);
+    		this.totalText.setText(total);
+    		this.remainText.setText(remain);
+    		this.setLoginStatus(status,ReadStatus.useOut);
+    	}else {
+    		this.nameText.setText("");
+    		this.usedText.setText("");
+    		this.totalText.setText("");
+    		this.remainText.setText("");
+    		this.setLoginStatus(status,ReadStatus.useOut);
+    	}
+    }
+    
+    /**
+     * 设置状态标签显示的内容 包括已登录,未登录,用户名或密码错误,流量已用完,已断网
+     * @param loginstatus 登录的状态
+     * @param useOut 标识是否用完流量的布尔变量
+     */
+    public void setLoginStatus(int loginstatus,boolean useOut)
+    {
+    	if(!ReadStatus.WebLost)	
+		{	if(loginstatus==1)
+			{	statusLabel.setForeground(Color.green);
+				statusLabel.setText("已登录");
+				logoutButton.setEnabled(true);
+			}
+			else if(loginstatus==0)
+			{
+				statusLabel.setForeground(Color.red);
+				statusLabel.setText("未登录");
+				logoutButton.setEnabled(false);
+			}else if(loginstatus==-1){
+				logoutButton.setEnabled(false);
+				ButtonAreaPanel.loginButton.setEnabled(false);
+				statusLabel.setForeground(Color.blue);
+				statusLabel.setText("用户名或密码错误");	
+			}
+			if(useOut)
+			{
+				statusLabel.setForeground(Color.blue);
+				statusLabel.setText("流量已用完");
+				logoutButton.setEnabled(true);
+				
+			}
+			if(ButtonAreaPanel.autoLogin)
+			{	logoutButton.setEnabled(false);
+			}
+			else {	logoutButton.setEnabled(true);
+						ButtonAreaPanel.autoLogin=false;
+			}
+		}
+		else {
+			statusLabel.setForeground(Color.blue);
+			statusLabel.setText("已断网");
+//			logoutButton.setEnabled(false);
+//			ButtonAreaPanel.loginButton.setEnabled(false);
+			
+		}
+>>>>>>> d94da75913dd6b8f495ae2229709a38c1fb0ba37:src/lin/component/FlowDisplayPanel.java
     }
 
     public void actionPerformed(ActionEvent e) {

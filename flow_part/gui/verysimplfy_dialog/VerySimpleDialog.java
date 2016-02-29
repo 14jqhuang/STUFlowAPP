@@ -29,10 +29,50 @@ public class VerySimpleDialog extends JDialog implements ActionListener, WindowL
 	private String getRateData(boolean weblost,String used,String total,boolean useOut)
 	{
 		if (!weblost) {
+<<<<<<< HEAD:flow_part/gui/verysimplfy_dialog/VerySimpleDialog.java
 			if (!useOut)
 				return "已用:" +
 					(int) (FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.usedAmount)*100.0/ 
 							FlowAppMainFrame.webStatus.flowStringToNumber(FlowAppMainFrame.webStatus.totalAmount) ) + "%";
+=======
+		    int result = 0;
+			String total_temp=ReadStatus.subNum(total);
+			String used_temp=ReadStatus.subNum(used);
+System.out.println("total: "+total_temp);
+System.out.println("used: "+used_temp);
+			int index=total_temp.indexOf(",");
+			if (!useOut)
+			{	if(index==-1)
+				{  try {
+					result=(int) (Double.parseDouble(used_temp) / Double.parseDouble(total_temp)*100);
+System.out.println(result);
+					} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					return "未登录";
+					}
+					return "已用:" + result+ "%";
+				}
+				else {
+					double to=Integer.parseInt(total_temp.substring(0, index))*1000+
+							Integer.parseInt(total_temp.substring(index+1));
+					index=used_temp.indexOf(",");
+					double us;
+					if (index!=-1) {
+						us = Integer.parseInt(used_temp.substring(0, index)) * 1000
+								+ Integer.parseInt(used_temp.substring(index + 1));
+					}
+					else us=Integer.parseInt(used_temp);
+					try {
+						result=(int)(us/to*100);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						return "计算错误";
+					}
+					return  "已用:" + (int) 
+							(us/to* 100) + "%";
+				}
+			}
+>>>>>>> d94da75913dd6b8f495ae2229709a38c1fb0ba37:src/lin/gui/VerySimpleDialog.java
 			else
 				return "已爆:" + "100%";
 		}else
