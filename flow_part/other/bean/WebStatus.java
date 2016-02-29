@@ -14,10 +14,11 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-import gui.mainfraim.FlowAppMainFrame;
+import interfaces.timer.UseTimer;
+import resource.loadconfig.LoadConfig;
 import resource.webserver.ResourcePath;
 
-public class WebStatus {
+public class WebStatus implements UseTimer {
 	/*
 	 * 1.记得退出的时候把时间关掉
 	 * 2.不知道为什么并不能截取到密码错误的情况
@@ -36,8 +37,14 @@ public class WebStatus {
 	private Timer timer;
 	
 	public WebStatus() {
-		
-		timer=new Timer(FlowAppMainFrame.controller.interval, new ActionListener() {
+		LoadConfig config = null;
+		try {
+			config = new LoadConfig();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		int interval = Integer.parseInt(config.readProperty("interval"));
+		timer=new Timer(interval, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -55,13 +62,13 @@ public class WebStatus {
 		});
 	}
 	
-	public Timer startConnection()
+	@Override
+	public void startTimer()
 	{
 		//这里出错的话可能是断网了
 		try {
-			input=this.getStringBuilder(ResourcePath.SERVERPATH);
+			input=this.openWebsite(ResourcePath.SERVERPATH);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			//处理断网
 			WebLost=true;
@@ -69,7 +76,6 @@ public class WebStatus {
 			//timer.stop();
 		}
 		timer.start();
-		return timer;		
 	}
 	
 	//给各个变量赋值
@@ -97,30 +103,24 @@ public class WebStatus {
 		remainAmount="";
 	}	
 	
-	//获取网页的流
-	//在与服务器断开连接的时候会出错 断网的时候在调用getStringBuilder中处理了
+	
 	/**
 	 * 读取网页的内容
+	 * 获取网页的流
+	 * 在与服务器断开连接的时候会出错 
+	 * 断网的时候在调用getStringBuilder中处理了
 	 * @param pathname 网址
 	 * @return BufferReader对象
 	 * @throws IOException
 	 */
-	private BufferedReader openStream(String pathname) throws IOException
+	public StringBuilder openWebsite(String pathname)
+			throws IOException
 	{
 		BufferedReader br=null;
 		URL url=new URL(pathname);
 		URLConnection con=url.openConnection();
-		// TODO Auto-generated catch block
 		InputStream in=con.getInputStream();//java.net.ConnectException: Connection timed out: connect
 		br=new BufferedReader(new InputStreamReader(in));
-		return br;
-		
-	}
-	
-	//读取网页的数据放在一个StringBuilder中并返回
-	private StringBuilder getStringBuilder(String pathname) throws IOException
-	{
-		BufferedReader br=this.openStream(pathname);
 		if (!WebLost) {
 			String line;
 			StringBuilder b = new StringBuilder();
@@ -130,10 +130,17 @@ public class WebStatus {
 			br.close();
 			return b;
 		}else return new StringBuilder("");
+		
 	}
 	
-	//用index来首搜索流量数据
-	//label的格式应该是<></>
+	/**
+	 * 用index来首搜索流量数据
+	 * label的格式应该是<></>
+	 * @param input
+	 * @param preLabel 前面标签的内容
+	 * @param lasLabel 后面标签的内容
+	 * @return 返回标签中的数据
+	 */
 	public String cutDataInLabel(StringBuilder input , String preLabel,String lasLabel)
 	{
 		String data = "";
@@ -183,7 +190,11 @@ public class WebStatus {
 		return tempInt;
 	}
 
-	//计算剩余流量的算法
+	/**
+	 * 计算剩余流量的方法
+	 * @return
+	 * @throws IOException
+	 */
 	private  String setRemainAmount() throws IOException
 	{
 		this.setLoginStatus(input);
@@ -214,9 +225,7 @@ public class WebStatus {
 						useOut=true;			
 					else useOut=false;
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
 				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
 				}
 			}
 		}
@@ -252,7 +261,7 @@ public class WebStatus {
 	public void refreshInput() throws IOException
 	{
 		input=null;
-		input=getStringBuilder(ResourcePath.DATAPATH);
+		input=openWebsite(ResourcePath.DATAPATH);
 	}
 	
 	public void setWebStatus() throws IOException
@@ -261,38 +270,15 @@ public class WebStatus {
 		this.setLoginStatus(input);
 		this.setUseOut();
 	}
-
 	
-	public static void main(String[] args) throws IOException {
-//		WebStatus re=new WebStatus();		
-//		re.startConnection();
-//		System.out.println("usname= "+re.cutDataInLabel("<td width=\"262\" class=\"text3\">", "</td>"));
-//		System.out.println( "ub= "+re.cutDataInLabel("<td class=\"text3\" id=\"ub\">", "</td>"));
-//		System.out.println("tb= "+ re.cutDataInLabel("<td class=\"text3\" id=\"tb\">", "</td>"));
-//		System.out.println("remain= "+ re.remainAmount);
-//		re.setWebStatus();
-//		re.setLoginStatus(re.input);
-//System.out.println("loginStatus="+re.loginStatus);
-//		re.setUseOut();
-//System.out.println("UseOut?"+re.useOut);
-//System.out.println("Input=null?"+(re.input==null));
-//System.out.println("input="+re.input);
-//System.out.println("UserName"+re.getUserName());
-//System.out.println("TotalAmount="+re.getTotalAmount());
-//System.out.println("UsedAmpunt="+re.getUsedAmount());
-//try {
-//	System.out.println("RemainAmount="+re.getRemainAmount());
-//} catch (IOException e) {
-//	e.printStackTrace();
-//}
-//		re.setNull();
-//	System.out.println("\n\nAftersetNull\n"
-//			+ "loginStatus="+re.loginStatus
-//			+"\nUseOut?"+re.useOut
-//			+ "\nUserName"+re.getUserName()
-//			+ "\nTotalAmount="+re.getTotalAmount()
-//			+ "\nUsedAmpunt="+re.getUsedAmount()
-//			+ "\nRemainAmount="+re.getRemainAmount());
-//		re.setWebStatus();
+	@Override
+	public void setDelay(int delay) {
+		this.timer.setDelay(delay);
+		
+	}
+
+	@Override
+	public void stopTimer() {
+		this.timer.stop();
 	}
 }

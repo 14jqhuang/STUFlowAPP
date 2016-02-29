@@ -9,6 +9,8 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
+import resource.webserver.ResourcePath;
+
 public class FlowLogRequest {
 	private static HttpURLConnection con;
 	private static OutputStreamWriter out;
@@ -18,7 +20,7 @@ public class FlowLogRequest {
 		throw new Exception("不要实例化SendLoginRequest");
 	}
 	
-	public static void login(String serverpath,String params) throws IOException
+	public static int login(String serverpath,String params) throws IOException
 	{
 		try {
 			url=new URL(serverpath);
@@ -37,17 +39,17 @@ public class FlowLogRequest {
 			out.write(params);
 			out.flush();
 			out.close();
-//			System.out.println(con.getResponseCode());
 			con.disconnect();
-//System.out.println(con.getResponseCode());//就算是断开连接了也能得到什么,而且两次的结果是一样的
+			return con.getResponseCode();
 		} catch (SocketTimeoutException e) {
 			JOptionPane.showMessageDialog(null, "已断网");
+			return 404;
 		}
 
 
 	}
 	
-	public static void logout(String serverpath) throws IOException
+	public static int logout(String serverpath) throws IOException
 	{
 		String params="logout=";//好像随便发点什么就能退出登录
 		try {			
@@ -68,15 +70,16 @@ public class FlowLogRequest {
 			out.write(params);
 			out.flush();
 			out.close();
-//			System.out.println(con.getResponseCode());
 			con.disconnect();
+			return con.getResponseCode();
 		} catch (SocketTimeoutException e) {
 			JOptionPane.showMessageDialog(null, "已断网");
+			return 404;
 		}
 	}
 	
-//	public static void main(String[] args) throws IOException {
-//		FlowLogRequest.login(ResourcePath.SERVERPATH,"AuthenticateUser=14sxlin&AuthenticatePassword=pw146348");
-//	}
+	public static void main(String[] args) throws IOException {
+		FlowLogRequest.logout(ResourcePath.SERVERPATH);
+	}
 
 }

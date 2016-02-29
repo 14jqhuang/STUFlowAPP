@@ -2,8 +2,12 @@ package other.bean;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import resource.webserver.ResourcePath;
 
 public class TestWebStatue {
 
@@ -28,6 +32,13 @@ public class TestWebStatue {
 		assertEquals(233334555, result1);
 		assertEquals(23231222, result2);
 		assertEquals(23031022, result3);
+	}
+	
+	@Test
+	public void testOpenWebsiteWork() throws IOException {
+		StringBuilder sb = 
+				webstatus.openWebsite(ResourcePath.DATAPATH);
+		assertNotEquals("", sb.toString());
 	}
 
 }

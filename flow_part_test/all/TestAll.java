@@ -7,6 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import lin.readwrite.TestDecode;
 import other.bean.TestAccount;
 import other.bean.TestWebStatue;
+import other.tool.TestFlowLogRequest;
 import other.tool.TestWriteAccount;
 import resource.loadconfig.TestLoadConfig;
 
@@ -14,9 +15,10 @@ import resource.loadconfig.TestLoadConfig;
 @SuiteClasses(value= {
 		TestDecode.class,
 		TestWebStatue.class,
-		TestWriteAccount.class,
 		TestAccount.class,
-		TestLoadConfig.class
+		TestLoadConfig.class,
+		TestWriteAccount.class,
+		TestFlowLogRequest.class
 		})
 public class TestAll {
 

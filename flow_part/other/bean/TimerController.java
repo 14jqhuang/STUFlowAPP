@@ -1,50 +1,43 @@
 package other.bean;
 
-import javax.swing.Timer;
+import java.util.ArrayList;
+import java.util.List;
+
+import interfaces.timer.UseTimer;
 
 public class TimerController {
 	
-	public  int interval=1*1500;//快速反应
-	
-	private Timer buttonPanelTimer,
-					 	 flowPanelTimer,
-						 webConnectionTimer;
-	
-	public Timer getButtonPanelTimer() {
-		return buttonPanelTimer;
-	}
-
-	public void setButtonPanelTimer(Timer buttonPanelTimer) {
-		this.buttonPanelTimer = buttonPanelTimer;
-	}
-
-	public Timer getFlowPanelTimer() {
-		return flowPanelTimer;
-	}
-
-	public void setFlowPanelTimer(Timer flowPanelTimer) {
-		this.flowPanelTimer = flowPanelTimer;
-	}
-
-	public Timer getWebConnectionTimer() {
-		return webConnectionTimer;
-	}
-
-	public void setWebConnectionTimer(Timer webConnectionTimer) {
-		this.webConnectionTimer = webConnectionTimer;
+   private List<UseTimer> timerList; 
+   
+   public TimerController() {
+	timerList =new ArrayList<>();
+}
+   
+   public void addTimer(UseTimer timer) {
+	   timerList.add(timer);
+   }
+   
+	public void startAllTimer() {
+		
+		for(UseTimer timer:timerList)
+		{
+			timer.startTimer();
+		}
 	}
 	
 	public void setDelay(int delay)
 	{
-		buttonPanelTimer.setDelay(delay);
-		flowPanelTimer.setDelay(delay);
-		webConnectionTimer.setDelay(delay);
+		for(UseTimer timer:timerList)
+		{
+			timer.setDelay(delay);
+		}
 	}
 	
 	public void restartAll()
 	{
-		buttonPanelTimer.restart();
-		flowPanelTimer.restart();
-		webConnectionTimer.restart();
+		for(UseTimer timer:timerList)
+		{
+			timer.stopTimer();;
+		}
 	}
 }

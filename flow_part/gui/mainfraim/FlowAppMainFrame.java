@@ -59,16 +59,26 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 	
 	
 	public FlowAppMainFrame() {
+		try {
+			config = new LoadConfig();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		drawGui();
 
 		//把读取网络连接的时间器交给时间器管理
-		controller.setWebConnectionTimer(webStatus.startConnection());
+		controller.addTimer(buttonPanel);
+		controller.addTimer(displayPanel);
+		controller.addTimer(webStatus);
+		controller.startAllTimer();
 		
 		//设置2个状态
 		this.setAutoLogin();
 		this.setAutoSelect();
 		this.setVisible(true);
+		
+		controller.startAllTimer();
 	}
 	
 	private void drawGui()
@@ -212,7 +222,6 @@ public class FlowAppMainFrame extends JFrame implements ActionListener, ItemList
 		//显示精简面板
 		if(chekboxItem[1].isSelected()&&simplifyDialog==null)
 		{		simplifyDialog=new SimplifyDialog(true,displayPanel.timer);				
-System.out.println(infront);
 				simplifyDialog.updateOnTop(infront);
 				this.setVisible(false);
 		}

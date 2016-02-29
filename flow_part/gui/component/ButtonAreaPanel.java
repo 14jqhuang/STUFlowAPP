@@ -20,13 +20,15 @@ import gui.account_dialog.AddAccountDialog;
 import gui.alarm_dialog.AlarmSettingDialog;
 import gui.alarm_dialog.PlayMusic;
 import gui.mainfraim.FlowAppMainFrame;
+import interfaces.timer.UseTimer;
 import other.bean.Account;
 import other.tool.FlowLogRequest;
 import resource.loadconfig.LoadConfig;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
-public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListener {
+public class ButtonAreaPanel extends JPanel 
+	implements ActionListener, ItemListener ,UseTimer{
 
 	public  JComboBox<String> accountSelectCombo;
 	public  static JButton loginButton;
@@ -35,8 +37,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	public  JCheckBox autoSelectChBox;
 	private JButton alarmButton;
 	public AddAccountDialog accountDialog;
-	public static boolean autoLogin=false;
-	public static boolean hasDefault;
 	public static Account Account;
 	public static boolean alarmhasSet=false;
 	public String params;
@@ -52,7 +52,6 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		try {
 			config = new LoadConfig();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -97,15 +96,16 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 	}
 	
 	//启动时间器
-	private void startTimer()
+	@Override
+	public  void startTimer()
 	{
-		
-		timer=new Timer(FlowAppMainFrame.controller.interval, this);
-		FlowAppMainFrame.controller.setButtonPanelTimer(timer);
+		int interval = Integer.parseInt(config.readProperty("interval"));
+		timer=new Timer(interval, this);
 		if(!FlowAppMainFrame.webStatus.WebLost)
 			timer.start();
 		else loginButton.setEnabled(false);
-		if(FlowAppMainFrame.webStatus.loginStatus==FlowAppMainFrame.webStatus.IN)
+		if(FlowAppMainFrame.webStatus.loginStatus==
+					FlowAppMainFrame.webStatus.IN)
 			loginButton.setEnabled(false);		
 				
 	}
@@ -240,7 +240,7 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 		
 		//自动登录的功能记录
 		if(autoLoginChBox.isSelected())
-		{	autoLogin=true;								//这是为了让flowdisplay的按钮不可用	,传递全局信息		
+		{	FlowAppMainFrame.autologin=true;								//这是为了让flowdisplay的按钮不可用	,传递全局信息		
 			if(FlowAppMainFrame.webStatus.loginStatus==1)
 				if(FlowAppMainFrame.autologin)
 				{	
@@ -250,15 +250,29 @@ public class ButtonAreaPanel extends JPanel implements ActionListener, ItemListe
 			if(autoSelectChBox.isSelected())
 			{	
 				config.setProperty("autoselect", "yes");
+				FlowAppMainFrame.autoSelect = true;
 			}
 			else {		
 				config.setProperty("autoselect", "no");
+				FlowAppMainFrame.autoSelect = false;
 			}
 		}
 		else 	
 			{
-				autoLogin=false;	
+				FlowAppMainFrame.autologin = false;	
 				config.setProperty("autologin", "no");
 			}
+	}
+
+
+	@Override
+	public void setDelay(int delay) {
+		this.timer.setDelay(delay);
+		
+	}
+
+	@Override
+	public void stopTimer() {
+		this.timer.stop();
 	}
 }

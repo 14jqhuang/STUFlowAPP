@@ -17,16 +17,19 @@ import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 import gui.mainfraim.FlowAppMainFrame;
+import interfaces.timer.UseTimer;
 import other.tool.FlowLogRequest;
 import resource.loadconfig.LoadConfig;
 import resource.webserver.ResourcePath;
 
 @SuppressWarnings("serial")
-public class FlowDisplayPanel extends JPanel implements ActionListener {
+public class FlowDisplayPanel extends JPanel 
+	implements ActionListener,UseTimer {
 	/*
 	 * 记得退出的时候把时间关掉
 	 */
-	public JTextField usedText,totalText,remainText,nameText;//用来显示流量的数值
+	public JTextField usedText,totalText,
+				remainText,nameText;//用来显示流量的数值
 	public JLabel statusLabel;
 	public JButton logoutButton;
 	private GridBagLayout gridbag;
@@ -40,7 +43,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	try {
 			config = new LoadConfig();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	drawGui();
@@ -50,9 +52,9 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     
     public void startTimer()
     {
-    	timer= new Timer(FlowAppMainFrame.controller.interval, this);
-    	FlowAppMainFrame.controller.setFlowPanelTimer(timer);
-    	timer.start();
+    	int interval = Integer.parseInt(config.readProperty("interval"));
+		timer=new Timer(interval, this);
+    	timer.start(); 
     }
     
     //设置显示的数据
@@ -99,11 +101,11 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 				statusLabel.setText("流量已用完");
 				logoutButton.setEnabled(false);
 			}
-			if(ButtonAreaPanel.autoLogin)
+			if(FlowAppMainFrame.autologin)
 			{	logoutButton.setEnabled(false);
 			}
-			else {	logoutButton.setEnabled(true);
-						ButtonAreaPanel.autoLogin=false;
+			else {	
+				logoutButton.setEnabled(true);
 			}
 		}
 		else {
@@ -186,26 +188,18 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
     	
     	//退出登录的处理动作
     	logoutButton.addActionListener(e->{
-    		if(e.getSource()==logoutButton)
     			try {
-    				
-    				try {
-    					FlowAppMainFrame.controller.setDelay(1);//设置为1毫秒的极速反应
-    				} catch (NullPointerException e1) {
-    				}
-    				
     				if(FlowAppMainFrame.autologin)
     				{	config.setLoginAccount(FlowAppMainFrame.webStatus.userName);
     				}
     				
     				FlowLogRequest.logout(ResourcePath.SERVERPATH);		
-    				
+
     				//更新显示的数据
-//    				this.setTexts(FlowAppMainFrame.webStatus.userName,FlowAppMainFrame.webStatus.usedAmount, 
-//    						FlowAppMainFrame.webStatus.totalAmount, FlowAppMainFrame.webStatus.remainAmount,FlowAppMainFrame.webStatus.loginStatus);
-    				this.setTexts("", "", "", "", FlowAppMainFrame.webStatus.loginStatus);
+    				this.setTexts("", "", "", "", 
+    						FlowAppMainFrame.webStatus.loginStatus);
+    				ButtonAreaPanel.loginButton.setEnabled(true);		
     				
-    				ButtonAreaPanel.loginButton.setEnabled(true);			
     			} catch (IOException e1) {
     				JOptionPane.showMessageDialog(null, "发送退出信息失败");
     			}
@@ -225,18 +219,18 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 			int time=0;//记录试了几个账号
 			//如果是登录着,发送退出的信息
 			if(FlowAppMainFrame.webStatus.loginStatus==1)
-				try {
+			{	try {
 					FlowLogRequest.logout(ResourcePath.SERVERPATH);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 			
-			//暂停1秒
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				//暂停1秒
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 			
 			//用别的账号登录
@@ -255,7 +249,6 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					
@@ -309,7 +302,19 @@ public class FlowDisplayPanel extends JPanel implements ActionListener {
 		}
 		
 		//检查退出登录的按钮
-		if(FlowAppMainFrame.webStatus.loginStatus==0)
+		if(FlowAppMainFrame.webStatus.loginStatus<=0)
 			logoutButton.setEnabled(false);
+	}
+
+	
+    @Override
+    public void setDelay(int delay) {
+		this.timer.setDelay(delay);
+	}
+
+	
+    @Override
+	public void stopTimer() {
+		this.timer.stop();
 	}
 }

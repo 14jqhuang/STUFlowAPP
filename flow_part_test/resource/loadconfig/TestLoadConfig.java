@@ -1,6 +1,7 @@
 package resource.loadconfig;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,12 @@ public class TestLoadConfig {
 	public void testReadPropertiesWell() {
 		assertNotNull(config.isAutoLogin());
 		assertNotNull(config.isAutoSelect());
-		assertEquals("", config.getLoginAccount());
-		assertEquals("", config.getDefaultLoginAccount());
+		config.setDefaultLoginAccount("14sxlin");
+		assertEquals("14sxlin", config.getDefaultLoginAccount());
+		config.setLoginAccount("xiaoming");
+		assertEquals("xiaoming", config.getLoginAccount());
+		assertNotNull(Integer.
+				parseInt(config.readProperty("interval")));
 	}
 
 }
